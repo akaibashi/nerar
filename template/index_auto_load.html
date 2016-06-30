@@ -1,0 +1,51 @@
+{% for key,val in img_list %}
+    <div  class="grid-content"
+          style="
+                  background-repeat : no-repeat;
+                  background-position: center center;                  
+                  background-image: url(/nerar/images/mini/{{ val.file_name }});
+                  min-width: 300px;
+                  width:{{ val.mini_width }}px;
+                  height:{{ val.mini_height }}px; 
+                  "
+          token="{{ val.token }}"
+                  >  
+      <div class="grid-item"
+           style="
+                  margin-top:{{val.margin_top}}px;
+                  ">
+        <span class="information"
+              style="
+                      min-width: 300px;
+                      width:{{ val.mini_width }}px;
+                      ">  
+          <br />      
+                    
+          {% if is_login %}   
+            <div class="fav_conteiner">   
+              {% if val.is_fav %}                        
+                <div class="info_favorite"
+                      img_id="{{ val.id }}"
+                      user_id="{{ user_id }}"                  
+                >
+                </div>   
+              {% else %}
+                <div class="info_un_favorite"
+                      img_id="{{ val.id }}"
+                      user_id="{{ user_id }}"                  
+                >
+
+                </div>               
+              {% endif %} 
+            </div>
+          {% endif %}  
+          <div class="info_description">
+            {{ val.comment }}
+          </div>                
+          <div class="info_date">
+            {{ val.created_disp }}
+          </div>        
+        </span>      
+      </div>            
+    </div>
+{% endfor %}  

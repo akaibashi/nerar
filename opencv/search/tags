@@ -1,0 +1,37 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CC	Makefile	/^CC = gcc -Wall -O2$/;"	m
+CXX	Makefile	/^CXX = g++ -Wall -O2$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS = `pkg-config --cflags opencv`$/;"	m
+DESC_FILE	kdtree_recognition.cpp	/^const char* DESC_FILE = "description.txt";$/;"	v
+DESC_FILE	keypoint2.cpp	/^const char *DESC_FILE = "description.txt";  \/\/ 特徴量格納ファイル$/;"	v
+DESC_FILE	lsh_recognition.cpp	/^const char* DESC_FILE = "description.txt";$/;"	v
+DIM	kdtree_recognition.cpp	/^const int DIM = 128;$/;"	v
+DIM	keypoint2.cpp	/^const int DIM = 128;            \/\/ SURF特徴量の次元数$/;"	v
+DIM	lsh_recognition.cpp	/^const int DIM = 128;$/;"	v
+DIM_VECTOR	keypoint.cpp	/^const int DIM_VECTOR = 128;  \/\/ 128次元ベクトル$/;"	v
+extractSURF	keypoint2.cpp	/^int extractSURF(char *filename, CvSeq* &imageKeypoints, CvSeq* &imageDescriptors, CvMemStorage* &storage) {$/;"	f
+FRAMEWOKS	Makefile	/^FRAMEWOKS = -framework OpenGL -framework GLUT -framework Foundation$/;"	m
+IMAGE_DIR	kdtree_recognition.cpp	/^const char* IMAGE_DIR = "imgs\/cellphone";$/;"	v
+IMAGE_DIR	keypoint2.cpp	/^const char *IMAGE_DIR = "imgs\/cellphone";$/;"	v
+IMAGE_DIR	lsh_recognition.cpp	/^const char* IMAGE_DIR = ".\/imgs\/cellphone";$/;"	v
+LDFLAGS	Makefile	/^LDFLAGS = `pkg-config --libs opencv`$/;"	m
+loadDescription	kdtree_recognition.cpp	/^bool loadDescription(const char *filename, vector<int> &labels, vector<int> &laplacians, CvMat* &objMat) {$/;"	f
+loadDescription	lsh_recognition.cpp	/^bool loadDescription(const char *filename, vector<int> &labels, vector<int> &laplacians, CvMat* &objMat) {$/;"	f
+loadObjectId	kdtree_recognition.cpp	/^bool loadObjectId(const char *filename, map<int, string>& id2name) {$/;"	f
+loadObjectId	lsh_recognition.cpp	/^bool loadObjectId(const char *filename, map<int, string>& id2name) {$/;"	f
+main	kdtree_recognition.cpp	/^int main(int argc, char** argv) {$/;"	f
+main	keypoint.cpp	/^int main(int argc, char** argv) {$/;"	f
+main	keypoint2.cpp	/^int main(int argc, char **argv) {$/;"	f
+main	lsh_recognition.cpp	/^int main(int argc, char** argv) {$/;"	f
+OBJID_FILE	kdtree_recognition.cpp	/^const char* OBJID_FILE = "object.txt";$/;"	v
+OBJID_FILE	lsh_recognition.cpp	/^const char* OBJID_FILE = "object.txt";$/;"	v
+OBJ_FILE	keypoint2.cpp	/^const char *OBJ_FILE = "object.txt";        \/\/ 物体ID格納ファイル$/;"	v
+saveFile	keypoint2.cpp	/^int saveFile(int objId, char *filename, CvSeq* imageKeypoints, CvSeq* imageDescriptors, ofstream& objFile, ofstream& descFile) {$/;"	f
+SURF_PARAM	kdtree_recognition.cpp	/^const int SURF_PARAM = 400;$/;"	v
+SURF_PARAM	keypoint2.cpp	/^const double SURF_PARAM = 400;  \/\/ SURFのパラメータ$/;"	v
+SURF_PARAM	lsh_recognition.cpp	/^const int SURF_PARAM = 400;$/;"	v

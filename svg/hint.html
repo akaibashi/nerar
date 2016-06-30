@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <style>
+  /* Write code */
+  body{
+  }
+  #player{
+    background-color:#DDD;
+    height: 600px;
+    width: 1200px;
+  }
+  </style>
+</head>
+<body>
+
+    <div id="nav"></div>
+    
+    <script src="./svg/bonsai.js"></script>
+    <div id="content">
+      <div id="player"></div>
+      <script type="bs" id="bs">
+      /* 初期値 */
+      var x,y,m,w,h;
+      var MAX_W,MAX_H,WIDTH,HEIGHT;
+      //最大サイズ
+      var MAX_W = 1200;
+      var MAX_H = 600;
+
+      //オブジェクトのサイズ
+      var m = 2; //倍率(magnification)
+      var WIDTH = 100 * m; //幅 
+      var HEIGHT = 100 * m; //高
+      
+      /* Draw Log Memo */
+      /* Rules 
+        1. Groupオブジェクトの格納
+        2. x,y,hintComment
+        3. 初期表示用には、Serverにて動的生成()
+      */
+      var hint = function(PointX,PointY){
+        var x = 100;
+        var y = 100;
+        /* Hint Group */
+        var hGroup = new Group();
+        hGroup._attributes.x = PointX;
+        hGroup._attributes.y = PointY;
+        hGroup.addTo(stage);
+        
+        var iGroup = new Group();
+        iGroup._attributes.x = x;
+        iGroup._attributes.y = y;
+        iGroup.addTo(hGroup);
+        
+        /* Hint Point */
+        var hPoints = new Circle(x, y, 4);
+        hPoints.addTo(hGroup);
+        hPoints.stroke('red',0.4);
+        
+        var hPoint=[];
+        //right
+        hPoint[0] = new Ellipse(20,0,15,5);
+        hPoint[0].addTo(iGroup);
+        hPoint[0].fill(color('green'));
+        
+        //under
+        hPoint[1] = new Ellipse(0,20,5,15);
+        hPoint[1].addTo(iGroup);
+        hPoint[1].fill(color('green'));
+        
+        //left
+        hPoint[2] = new Ellipse(-20,0,15,5);
+        hPoint[2].addTo(iGroup);
+        hPoint[2].fill(color('green'));
+        
+        hPoint[3] = new Ellipse(0,-20,5,15);
+        hPoint[3].addTo(iGroup);
+        hPoint[3].fill(color('green'));
+        
+        
+        /* HintSharp */
+        var hSharp = new Path([
+          ['moveTo', x-15*m, y-15*m],
+          ['lineBy', 15*m, 15*m],
+          ['lineBy', 15*m, -15*m],
+          ['lineBy', -30*m, 0*m]
+        ]);
+        hSharp.addTo(hGroup);
+        hSharp.stroke(color('rgba(0,0,0,.4)'),0);
+        hSharp.fill(color('rgba(0,0,0,.4)'));
+        
+        /* HintRect */
+        var rectX = x - 50 * m;
+        var rectY = y - 100 * m;
+        var rectW = WIDTH;
+        var rectH = HEIGHT - 15 * m;
+        var hRect = new Rect(rectX, rectY, rectW, rectH, 15 * m);
+        hRect.addTo(hGroup); 
+        hRect.fill(color('rgba(0,0,0,.4)'));
+  
+        /* 定点 */
+        var Ul = new Circle(rectX, rectY, 2);
+        Ul.addTo(hGroup);
+        Ul.fill('red');
+        var Dl = new Circle(rectX, rectY + rectH, 2);
+        Dl.addTo(hGroup);
+        Dl.fill('red');
+        var Ur = new Circle(rectX + rectW, rectY, 2);
+        Ur.addTo(hGroup);
+        Ur.fill('red');
+        var Dr = new Circle(rectX + rectW, rectY + rectH, 2);
+        Dr.addTo(hGroup);
+        Dr.fill('red');
+        
+        /* Hint Text */
+        var hText = new Text('foo');
+        hText.addTo(hGroup);
+        hText.attr({
+          fontFamily: 'Arial, sans-serif',
+          fontSize: '20',
+          fillColor: 'red',
+          strokeColor: 'yellow',
+          strokeWidth: 3
+        });
+        
+        iGroup.animate('1s', {
+          rotation: Math.PI
+        });
+        
+        hGroup.animate('1s', {
+          x: Math.random() * 500, y: Math.random() * 200
+        }, 
+        { easing: 'bounceInOut'});
+      };
+      
+      stage.on('pointermove', function(e) {
+        var x = e.stageX;
+        var y = e.stageY;
+        hint(x,y);
+      });
+      
+
+      </script>
+      <script>
+        var player = document.getElementById('player');
+        var b = bonsai.run(player, {
+          code: document.getElementById('bs').innerHTML,
+          height: 600,
+          width: 1200,
+          framerate: 50
+        });
+
+      </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta property="og:description" content="Hintは画像にヒントと呼ばれるコメントをみんなで残すサービスです" />
+<meta property="og:url" content="http://hinto.me/nerar/" />
+<meta property="og:image" content="http://hinto.me/nerar/common/img/logo_mint.png" />
+<meta property="og:site_name" content="Hint" />
+
+<title>{{ title }}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--[if IE]><script type="text/javascript" src="/_lib/js/excanvas.js"></script><![endif]-->
+<!-- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script -->
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/common_style.css" />
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
+<script src="/nerar/common/js/jquery.masonry.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/nerar/common/js/bonsai.js"></script>
+<script src="/nerar/common/js/tag_canvas.js" type="text/javascript"></script>
+<script src="/nerar/common/js/common_use.js" type="text/javascript" charset="UTF-8"></script>
+
+<!-- IEを撲滅するため無条件でエラー --> 
+<!--[if IE ]>
+<script>
+(function($){
+
+    location.href="/nerar/ie_information.php";  
+})();
+
+/*
+    $(document).ready( function(){
+    // IE用のエラーページへ遷移させる
+    location.href="/nerar/ie_information.php";    
+    });
+*/
+</script>
+<![endif]-->
+  
+
+
+<style type="text/css">
+/*<![CDATA[*/
+
+#light_background{
+    height:auto;
+}
+#light_background #detail{
+    height:auto;
+}
+
+
+#container_background{
+  background-image: url("/nerar/common/img/background_w.png");
+  background-repeat:repeat;
+  top:50px;
+  float:left;
+  width:100%;
+}
+
+#container{
+  min-width: 1024px;   
+  clear:both;
+  top: 30px;
+  margin: 0 auto;  
+}
+
+.grid-content{
+  -webkit-transform: skew(0deg);
+  -moz-transform: skew(0deg);  
+  box-shadow: 5px 15px 15px rgba(0,0,0,0.5);
+  -moz-box-shadow: 5px 15px 15px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 5px 15px 15px rgba(0,0,0,0.5);  
+  display: inline-block;
+  vertical-align: top;
+  margin: 0.5em 0.5em 0.5em 0.5em;
+  cursor: pointer;
+  position: relative;
+  font-family: "corda_light";
+  -webkit-perspective: 4000px;
+     -moz-perspective: 4000px;
+      -ms-perspective: 4000px;
+       -o-perspective: 4000px;
+          perspective: 4000px;
+  
+    border-radius: 10px;        /* CSS3草案 */  
+    -webkit-border-radius: 10px;    /* Safari,Google Chrome用 */  
+    -moz-border-radius: 10px;   /* Firefox用 */  
+
+}
+
+
+.grid-item {
+  height: 100px;
+  -webkit-transform-style: preserve-3d;
+     -moz-transform-style: preserve-3d;
+      -ms-transform-style: preserve-3d;
+       -o-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+          
+  -webkit-transition: -webkit-transform .6s;
+     -moz-transition: -moz-transform .6s;
+      -ms-transition: -ms-transform .6s;
+       -o-transition: -o-transform .6s;
+          transition: transform .6s;        
+}
+
+.grid-item:hover { 
+  -webkit-transform: translateZ(-50px) rotateX(95deg);
+     -moz-transform: translateZ(-50px) rotateX(95deg);
+      -ms-transform: translateZ(-50px) rotateX(95deg);
+       -o-transform: translateZ(-50px) rotateX(95deg);
+          transform: translateZ(-50px) rotateX(95deg);        
+}
+
+.grid-item:hover .information {
+  box-shadow: 0px 3px 8px rgba(0,0,0,0);
+  border-radius: 10px;
+}
+
+
+.grid-item .information {
+  display: block;
+  position: absolute;
+  top: 0;
+  height: 100px;
+  text-align: left;
+  border-radius: 0px;
+  padding: 0px;
+  font-size: 12px;
+  font: white;
+  box-shadow: none;
+  background: rgb(0,0,0, 0.5);
+  background: -moz-linear-gradient(top,  rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.5) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.5)), color-stop(100%,rgba(0,0,0,0.5)));
+  background: -webkit-linear-gradient(top,  rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%);
+  background: -o-linear-gradient(top,  rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%);
+  background: -ms-linear-gradient(top,  rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%);
+  background: linear-gradient(to bottom,  rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ecf1f4', endColorstr='#becad9',GradientType=0 );
+  -webkit-transform: rotateX(-90deg) translateZ(50px);
+     -moz-transform: rotateX(-90deg) translateZ(50px);
+      -ms-transform: rotateX(-90deg) translateZ(50px);
+       -o-transform: rotateX(-90deg) translateZ(50px);
+          transform: rotateX(-90deg) translateZ(50px);
+  -webkit-transition: all .6s;
+     -moz-transition: all .6s;
+      -ms-transition: all .6s;
+       -o-transition: all .6s;
+          transition: all .6s;  
+}
+
+
+.info_favorite{
+  -webkit-transition: all .6s;
+     -moz-transition: all .6s;
+      -ms-transition: all .6s;
+       -o-transition: all .6s;
+          transition: all .6s;  
+
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  float:right;
+  clear: both;
+  margin-top: 5px;
+  text-align: left;
+  font-size: 15px;
+  color : #ad9c9c;  
+  background-image: url("/nerar/common/img/heart.png"); 
+
+  width:16px;
+  height:16px;
+
+}
+.info_un_favorite{
+  -webkit-transition: all .6s;
+     -moz-transition: all .6s;
+      -ms-transition: all .6s;
+       -o-transition: all .6s;
+          transition: all .6s;  
+
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  float:right;
+  clear: both;
+  margin-top: 5px;
+  text-align: left;
+  font-size: 15px;
+  color : #ad9c9c;  
+  background-image: url("/nerar/common/img/heart-empty.png"); 
+
+  width:16px;
+  height:16px;
+
+}
+
+
+
+.fav_btn{
+  width:16px;
+  height:16px;
+}
+.un_fav_btn{
+  width:16px;
+  height:16px;  
+}
+
+
+.info_description{
+  float:left;
+  clear: both;
+  margin-top: 5px;
+  text-align: left;
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);  
+  background-color: rgba(190,202,217,0.2);
+
+}
+.info_date{
+  float:right;
+  clear: both;
+  margin-top: 5px;  
+  margin-bottom: 0px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);  
+  background-color: rgba(190,202,217,0.2);
+
+}
+
+
+/* light box　自作 */
+#light_background{
+  position: fixed;
+  overflow-y: auto;  
+  top:0%;
+  bottom:0%;
+  left: 0%;
+  right: 0%;
+  width: 100%;
+  height: 100%;  
+  min-height: 100%;
+  z-index: 3;
+/*  background-color: rgba(0,0,0,0.7);
+*/
+  background-color: rgba(255,255,255,0.7);
+  display: none;
+}
+
+.detail{  
+
+  z-index: 4;
+/*  background-image: url("/nerar/common/img/background_w.png"); 
+*/  position: relative;
+  top:0%;
+  bottom:0%;  
+  left: 10%;  
+  right: 30%;
+  width: 60%;
+  margin-top: 50px; 
+  margin-bottom: 50px;
+  height: 100%;
+  min-width: 768px;    
+  min-height:768px;  
+  max-height: 100%;
+  display: none;
+
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px;
+
+}
+
+
+#loader{
+  position: relative;  
+  width: 64px;
+  height: 64px;
+  margin-top: 45%;
+  left: 45%;  
+  right: 45%;  
+}
+
+
+
+
+/*]]>*/
+</style>
+<script type="text/javascript">
+//<![CDATA[
+
+$(function(){
+
+  // 自動で次の画像を読み込む場合のインデックス
+  var page_idx = 0;
+  // 現在ロード中かどうか判定
+  var is_loading = false;
+  // スクロール位置の保存
+  var scrollTop = 0;
+
+  // ライトボックスの背景ダブルクリック抑止の制御
+  var is_light_box_close_clicked = false;
+
+  // リサイズする
+  function resizeContainer(e) {
+    var containerWidth = $(window).width();
+    var base_int = 320;
+    var divi = Math.floor(containerWidth / base_int);
+    // ベースのwidthを変更
+    $("#container").css("width" , (divi * base_int));
+  }
+  $(window).bind("resize", resizeContainer);  
+  resizeContainer();  
+
+
+  // masonry
+  var $container = $('#container');
+  $container.imagesLoaded( function(){
+      $container.masonry({
+        itemSelector : '.grid-content',
+        isAnimated : false,
+        animationOptions: {
+          duration: 500,
+          easing: 'swing',
+          queue: false
+        }
+    });
+  });
+
+  // ページが遷移するタイミングで呼ばれる
+  window.addEventListener("popstate", function(popStateEvent) {
+    // light boxが表示されてたら非表示に
+    if($("#light_background").css("display") == 'block') {
+      $("#detail").fadeOut("fast");     
+      $("#light_background").fadeOut("slow");    
+      // 背景固定解除
+      $("body").removeClass('noscroll');  
+      // スクロール位置を元に戻す
+      $(window).scrollTop(scrollTop);
+      $("body").addClass('scroll');              
+      // 要素の内容を削除
+      $("#detail").empty(); 
+
+    }
+  }, false);
+
+  /*
+   *
+   * ajax通信
+   *
+   */
+  function ajax(method, path, data, callback, errcallback) {
+    $.ajax({
+      type: method,
+      url: path,
+      cache: false,
+      data: data,
+      success: callback,
+      error: errcallback
+    });
+  }
+
+  /* 一番下まで行ったときの自動で読み込む処理 */
+  function auto_loadder(){
+    // light boxが表示されていない場合のみ
+    if($("#light_background").css("display") != 'block' && $("#tag_canvas_background").css("display") != 'block') {
+      // 垂直スクロール量を取得する
+      var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+      // 表示領域の高さを取得する
+      var clientHeight = document.body.clientHeight || document.documentElement.clientHeight;
+
+      // スクロールバーで隠れた領域を含むコンテンツ領域の高さを取得する
+//      var scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight;
+      var scrollHeight = document.documentElement.scrollHeight;      
+      // Firefox・Chrome対応
+      if(scrollHeight === clientHeight) {
+        clientHeight = window.innerHeight;
+      }
+      // コンテンツ領域の底までの残り領域
+      var remain = scrollHeight - clientHeight - scrollTop;
+      // 一番下から1000pxの時点で次を読み込み
+
+      if(remain <= 200) {
+
+        // ロード中ではない場合のみ
+        if(!is_loading){
+          // 読み込み中
+          is_loading = true;
+          // インデックスを進める
+          page_idx++;
+
+          // ajaxで次のページ分のデータを取得する
+          var data = {"page_idx": page_idx};
+          var path = "/nerar/index_auto_load.php";
+          // 成功時
+          var sFun = function(data){
+            // 取ってきた次のページ分のデータを追加  
+            $('#container').append( data ).masonry( 'reload' );    
+            // 読み込み解除
+            is_loading = false;   
+          };
+
+          // 失敗時
+          var eFun = function(data) {
+            // エラー
+          };
+
+          ajax("GET", path, data, sFun, eFun);
+
+        }
+      }
+    }
+  }
+  window.onscroll=auto_loadder;
+
+  // 写真クリック時
+  $(".grid-content").on('click', function () {      
+
+    is_light_box_close_clicked = true;
+
+
+console.log("hoge1");
+
+    var self = $(this);
+    var token = $(self).attr("token");    
+
+    // pushstateしてhistoryに追加
+    history.pushState(null, "Replaced Title", ("/nerar/detail.php?token=" + token));
+    // 現在の位置に背景を固定する
+    $("body").removeClass('scroll');  
+    scrollTop = $(window).scrollTop();
+    $('body').addClass('noscroll').css('top', (-scrollTop) + 'px');
+    // light box表示
+    $("#light_background").fadeIn("fast", function(){
+
+      // 要素の内容を削除
+      $("#detail").empty();                     
+      // ローダー表示
+      $("#detail").append("<img id='loader' src='/nerar/common/img/loader.gif'>");           
+      $("#detail").fadeIn("slow");
+
+console.log("hoge2");
+
+
+    });        
+    // 詳細画面は先頭から表示
+    $("#light_background").scrollTop(0);
+
+
+
+    // ajax
+    var data = {"token": token,
+                "is_pjax": "true"};
+
+    var path = "/nerar/detail.php";
+
+    // 成功時
+    var sFun = function(data){
+console.log("seikou");
+
+      // ローダーを消して取得したデータを設定      
+      $("#detail").empty();       
+      $("#detail").html(data);
+        
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+      // エラー
+console.log("sippai");
+console.log(data);      
+    };
+
+console.log("hoge3");
+
+
+    ajax("GET", path, data, sFun, eFun);
+
+  });
+
+
+  // light box背景クリック時
+  $("#light_background").click(function () {
+    if(is_light_box_close_clicked){
+      // 1つ前の履歴に戻る
+      history.back();      
+      is_light_box_close_clicked = false;
+    }
+  });    
+
+
+  // light box内クリック時の場合
+  $("#detail").click(function () {
+    // light_backgroundがクリックされたイベントまで伝搬しないように明示的にfalseを返す
+    return false;
+  }); 
+
+
+  // Fav解除してる状態のボタンクリック時
+  $(".info_un_favorite").on('click', function () {  
+    var self = $(this);
+    var img_id = $(self).attr("img_id");  
+    var user_id = $(self).attr("user_id");  
+
+console.log("fabv");
+console.log(img_id);
+console.log(user_id);
+
+    // フォロー解除フラグ設定 0:fav解除　1:fav
+    var data = {"is_fav": 1,
+                "user_id": user_id,
+                "img_id": img_id
+                };
+    var path = "/nerar/favorite.php";
+    // 成功時
+    var sFun = function(data){
+      var retData = JSON.parse(data);
+      if (retData && (retData["is_success"] == "true")){
+        $(self).removeClass("info_un_favorite");
+        $(self).addClass("info_favorite");
+      }else{
+        // エラー
+        alert("sorry, proccess is failed!");      
+      }
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+      // エラー
+      alert("sorry, proccess is failed!");      
+    };
+
+    ajax("GET", path, data, sFun, eFun);
+
+    return false;
+
+  });
+  // Favしてる状態のボタンクリック時
+  $(".info_favorite").on('click', function () {  
+    var self = $(this);
+    var img_id = $(self).attr("img_id");  
+    var user_id = $(self).attr("user_id");  
+
+console.log("un fabv");
+console.log(img_id);
+console.log(user_id);
+
+    // フォロー解除フラグ設定 0:fav解除　1:fav
+    var data = {"is_fav": 0,
+                "user_id": user_id,
+                "img_id": img_id
+                };
+    var path = "/nerar/favorite.php";
+    // 成功時
+    var sFun = function(data){
+      var retData = JSON.parse(data);
+      if (retData && (retData["is_success"] == "true")){
+        $(self).removeClass("info_favorite");
+        $(self).addClass("info_un_favorite");
+      }else{
+        // エラー
+        alert("sorry, proccess is failed!");      
+      }
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+      // エラー
+      alert("sorry, proccess is failed!");      
+    };
+
+    ajax("GET", path, data, sFun, eFun);
+
+    return false;
+  });
+
+
+});
+
+//]]>
+</script>
+</head>
+<body>
+
+<div id="light_background">
+  <div id="detail" class="detail"></div>
+</div>
+
+{% include "/inc/header_navi.html" %} 
+
+
+  <div id="container_background">
+
+    <div id="container">
+
+    {% for key,val in img_list %}
+      <div  class="grid-content"
+            style="
+                    background-repeat : no-repeat;
+                    background-position: center center;                  
+                    background-image: url(/nerar/images/mini/{{ val.file_name }});
+                    min-width: 300px;
+                    width:{{ val.mini_width }}px;
+                    height:{{ val.mini_height }}px; 
+                    "
+            token="{{ val.token }}"
+                    >  
+        <div class="grid-item"
+             style="
+                    margin-top:{{val.margin_top}}px;
+                    ">                                     
+          <span class="information"
+                style="
+                        min-width: 300px;
+                        width:{{ val.mini_width }}px;
+                        ">  
+            <br />      
+            {% if is_login %}   
+              <div class="fav_conteiner">   
+                {% if val.is_fav %}                        
+                  <div class="info_favorite"
+                        img_id="{{ val.id }}"
+                        user_id="{{ user_id }}"                  
+                  >
+                  </div>   
+                {% else %}
+                  <div class="info_un_favorite"
+                        img_id="{{ val.id }}"
+                        user_id="{{ user_id }}"                  
+                  >
+
+                  </div>               
+                {% endif %} 
+              </div>
+            {% endif %}                        
+            <div class="info_description">
+              {{ val.comment }}
+            </div>                
+            <div class="info_date">
+              {{ val.created_disp }}
+            </div>        
+          </span>  
+        </div>   
+      </div>
+    {% endfor %}  
+
+    </div> 
+  </div> 
+
+</div>
+
+{% include "/inc/hot_tags.html" %} 
+
+</body>
+</html>

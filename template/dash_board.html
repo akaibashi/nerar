@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ title }}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--[if IE]><script type="text/javascript" src="/_lib/js/excanvas.js"></script><![endif]-->
+<!-- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script -->
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/common_style.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/nerar/common/js/jquery.masonry.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/nerar/common/js/bonsai.js"></script>
+<script src="/nerar/common/js/tag_canvas.js" type="text/javascript"></script>
+<script src="/nerar/common/js/common_use.js" type="text/javascript" charset="UTF-8"></script>
+
+<!-- IEを撲滅するため無条件でエラー --> 
+<!--[if IE ]>
+<script>
+(function($){
+
+    location.href="/nerar/ie_information.php";  
+})();
+
+/*
+    $(document).ready( function(){
+    // IE用のエラーページへ遷移させる
+    location.href="/nerar/ie_information.php";    
+    });
+*/
+</script>
+<![endif]-->
+  
+
+
+<style type="text/css">
+/*<![CDATA[*/
+
+body #light_background{
+    height:auto;
+}
+body #light_background #detail{
+    height:auto;
+}
+
+#left_nemu{
+  top:30px;
+  padding-top:50px;
+  border-right:1px solid rgba(0,0,0,0.2);  
+  float:left;
+  width:200px;
+  height:100%;
+  background-color: #ffffff;
+  position: fixed;  
+  z-index:1;
+
+}
+
+#container_background{
+  height:100%;
+
+}
+
+#content{
+  background-image: url("/nerar/common/img/background_w.png");  
+  float:left;
+  margin-left:200px;
+  margin-top:30px;
+/*  min-width: 823px;   
+*/  width:100%;
+/*  height:100%;
+*/
+
+}
+
+
+.left_nemu_content{
+  font-family: "corda_light";  
+  color : #ad9c9c;    
+  margin-top:70px;
+  padding-right: 20px;
+
+  margin-right:30px; 
+  text-align: right;
+  flot:right;
+  clear:both;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;   
+  border-radius: 10px;          
+}
+
+.left_nemu_content:hover{
+  padding-right: 10px;
+  margin-right:20px; 
+  background-color:#c1e4e9;  
+  cursor:pointer;
+}
+
+.left_nemu_content_selected{
+  font-family: "corda_light";  
+  color : #ffffff;    
+  margin-top:70px;
+  background-color:#ff7f7f;  
+  padding-right: 10px;
+  margin-right:20px; 
+  text-align: right;
+  flot:right;
+  clear:both;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;   
+  border-radius: 10px;           
+}
+
+
+#mark {
+  float:left;
+  position: fixed;
+  top:60px;
+  margin:75px;
+  margin-left:181px;
+  width: 50px;
+  height: 50px;
+  display: block;
+  clip: rect(auto 20px 50px auto);
+}
+#mark:after  {
+  border:1px solid rgba(0,0,0,0.2);
+  content: '';
+  position: absolute;
+  background-image: url("/nerar/common/img/background_w.png");
+  top: 8px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  transform:rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);  
+
+}
+
+#stream_tab{
+  height:100%;
+
+}
+#follow_tab{
+  position: relative;  
+/*  
+  height:100%;
+*/  
+}
+#follower_tab{
+  position: relative;  
+/*  
+  height:100%;
+*/  
+}
+
+#history_tab{
+  position: relative;  
+/*  
+  height:100%;
+*/  
+}
+
+#likes_tab{
+  position: relative;  
+/*  
+  height:100%;
+*/  
+}
+
+.comment_area{
+  float:left; 
+  clear:both;
+  margin: 10px;
+  padding:10px;
+
+  width: 900px;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  color : #ad9c9c;  
+  font-family: "corda_light";
+
+  background-image: url("/nerar/common/img/background.png");
+  box-shadow:1px 1px 2px rgba(0,0,0,0.2);
+
+}
+
+
+.stream_title{
+  float:left;
+  margin: 10px;
+  padding: 10px;  
+  width:450px;
+
+  color : #ad9c9c;  
+  font-family: "corda_light";  
+
+  border-bottom:1px solid rgba(0,0,0,0.2);
+
+}
+
+.date_time{
+  float:left;
+  margin:10px;
+  margin-left: 200px;  
+  text-align:right;
+
+  width:200px;
+
+  color : #ad9c9c;  
+  font-family: "corda_light";  
+  
+}
+
+
+.images{
+  text-align: right;
+  border-width: 0px;
+  float:left; 
+  clear:both;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;    
+  border-radius: 20px; 
+
+}
+
+.comment{
+  float:left;
+  width:400px;
+  margin:10px;
+
+  color : #ad9c9c;  
+  font-family: "corda_light";
+
+}
+
+.not_follow_msg{
+  float:left; 
+  clear:both;
+  margin: 10px;
+  padding:10px;
+
+  width: 900px;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  color : #ad9c9c;  
+  font-family: "corda_light"; 
+  
+  min-height:1024px;
+}
+
+
+
+
+
+.view_user_area{
+  float:left; 
+  clear:both;
+  margin: 10px;
+  padding:10px;
+
+  padding-bottom:100px;
+
+  margin:bottom:50px;
+
+  width: 900px;
+
+  color : #ad9c9c;  
+  font-family: "corda_light";
+
+  background-image: url("/nerar/common/img/background.png");
+  box-shadow:1px 1px 2px rgba(0,0,0,0.2);
+
+
+}
+
+.view_user_nick{
+  float:left;
+  clear:both;
+  text-align: center;
+  width:100%;
+  font-size:30px;
+  margin-top:20px;
+  margin-bottom:20px;
+  color : #ad9c9c;  
+  font-family: "corda_light"; 
+
+  border-bottom:1px solid rgba(0,0,0,0.2);
+
+
+}
+
+.view_user_image{
+  float:left; 
+  clear:both;
+
+  margin-left:350px;
+
+  text-align: center;
+  border-width: 0px;
+
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;    
+  border-radius: 20px; 
+
+}
+
+
+.view_user_profile{
+  float:left;
+  clear:both;
+  text-align: left;
+  width:100%;
+  font-size:30px;
+  margin-top:20px;
+  margin-bottom:20px;
+  color : #ad9c9c;  
+  font-family: "corda_light"; 
+
+}
+
+.view_user_border{
+  float:left;
+  clear:both;
+  text-align: left;
+  width:100%;
+  font-size:30px;
+  margin-top:20px;
+  margin-bottom:20px;
+  color : #ad9c9c;  
+  font-family: "corda_light"; 
+
+  border-bottom:1px solid rgba(0,0,0,0.2);
+
+}
+
+.follow_btn_area{
+  float:left;
+  margin:50px;
+  margin-top:150px;
+}
+
+
+.comment_del_btn{
+  float:right;
+  margin:10px;
+  margin-left: 200px;  
+  text-align:right;
+  width:20px;
+  height:20px;
+}
+
+.img_del_btn{
+  float:right;
+  margin:10px;
+  margin-left: 200px;  
+  text-align:right;
+  width:20px;
+  height:20px;
+}
+
+
+.ok_ng_style{
+  width:20px;
+  height:20px;  
+}
+
+/*]]>*/
+</style>
+<script type="text/javascript">
+//<![CDATA[
+
+$(function(){
+
+
+  /*
+   *
+   * ajax通信
+   *
+   */
+  function ajax(method, path, data, callback, errcallback) {
+    $.ajax({
+      type: method,
+      url: path,
+      cache: false,
+      data: data,
+      success: callback,
+      error: errcallback
+    });
+  }
+
+
+  // 初期表示はstreamタブを表示
+  $("#stream_tab").css("display","block");
+  $("#follow_tab").css("display","none");
+  $("#follower_tab").css("display","none");
+  $("#history_tab").css("display","none");
+  $("#likes_tab").css("display","none");
+
+  /* followerタブ選択時の挙動 */
+  function select_follower_tab(){
+    // スクロール位置を先頭に
+    $(window).scrollTop(0);
+
+    $("#mark").animate({"top": "240px"}, "fast");
+    $("#follower").removeClass('left_nemu_content');
+    $("#follower").addClass('left_nemu_content_selected'); 
+
+    $("#follow").removeClass('left_nemu_content_selected');
+    $("#follow").addClass('left_nemu_content');  
+    $("#stream").removeClass('left_nemu_content_selected');
+    $("#stream").addClass('left_nemu_content'); 
+    $("#history").removeClass('left_nemu_content_selected');
+    $("#history").addClass('left_nemu_content'); 
+    $("#likes").removeClass('left_nemu_content_selected');
+    $("#likes").addClass('left_nemu_content'); 
+
+    $("#stream_tab").css("display","none");
+    $("#follow_tab").css("display","none");
+    $("#follower_tab").css("display","block");
+    $("#history_tab").css("display","none");
+    $("#likes_tab").css("display","none");
+
+  }
+  /* followタブ選択時の挙動 */
+  function select_follow_tab(){
+    // スクロール位置を先頭に
+    $(window).scrollTop(0);
+
+    $("#mark").animate({"top": "150px"}, "fast");
+    $("#follow").removeClass('left_nemu_content');
+    $("#follow").addClass('left_nemu_content_selected'); 
+
+    $("#follower").removeClass('left_nemu_content_selected');
+    $("#follower").addClass('left_nemu_content');  
+    $("#stream").removeClass('left_nemu_content_selected');
+    $("#stream").addClass('left_nemu_content');  
+    $("#history").removeClass('left_nemu_content_selected');
+    $("#history").addClass('left_nemu_content'); 
+    $("#likes").removeClass('left_nemu_content_selected');
+    $("#likes").addClass('left_nemu_content'); 
+
+    $("#stream_tab").css("display","none");
+    $("#follow_tab").css("display","block");
+    $("#follower_tab").css("display","none");
+    $("#history_tab").css("display","none");
+    $("#likes_tab").css("display","none");
+
+  }
+  /* streamタブ選択時の挙動 */
+  function select_stream_tab(){
+    // スクロール位置を先頭に
+    $(window).scrollTop(0);
+
+    $("#mark").animate({"top": "60px"}, "fast");
+    $("#stream").removeClass('left_nemu_content');
+    $("#stream").addClass('left_nemu_content_selected');  
+
+    $("#follower").removeClass('left_nemu_content_selected');
+    $("#follower").addClass('left_nemu_content');  
+    $("#follow").removeClass('left_nemu_content_selected');
+    $("#follow").addClass('left_nemu_content');   
+    $("#history").removeClass('left_nemu_content_selected');
+    $("#history").addClass('left_nemu_content'); 
+    $("#likes").removeClass('left_nemu_content_selected');
+    $("#likes").addClass('left_nemu_content'); 
+
+    $("#stream_tab").css("display","block");
+    $("#follow_tab").css("display","none");
+    $("#follower_tab").css("display","none");
+    $("#history_tab").css("display","none");
+    $("#likes_tab").css("display","none");
+
+  }
+
+  /* historyタブ選択時の挙動 */
+  function select_history_tab(){
+    // スクロール位置を先頭に
+    $(window).scrollTop(0);
+
+    $("#mark").animate({"top": "330px"}, "fast");
+    $("#history").removeClass('left_nemu_content');
+    $("#history").addClass('left_nemu_content_selected'); 
+
+    $("#stream").removeClass('left_nemu_content_selected');
+    $("#stream").addClass('left_nemu_content');  
+    $("#follower").removeClass('left_nemu_content_selected');
+    $("#follower").addClass('left_nemu_content');  
+    $("#follow").removeClass('left_nemu_content_selected');
+    $("#follow").addClass('left_nemu_content');   
+    $("#likes").removeClass('left_nemu_content_selected');
+    $("#likes").addClass('left_nemu_content'); 
+
+    $("#stream_tab").css("display","none");
+    $("#follow_tab").css("display","none");
+    $("#follower_tab").css("display","none");
+    $("#history_tab").css("display","block");
+    $("#likes_tab").css("display","none");
+
+  }
+
+
+  /* likesタブ選択時の挙動 */
+  function select_likes_tab(){
+    // スクロール位置を先頭に
+    $(window).scrollTop(0);
+
+    $("#mark").animate({"top": "420px"}, "fast");
+    $("#likes").removeClass('left_nemu_content');
+    $("#likes").addClass('left_nemu_content_selected'); 
+
+    $("#stream").removeClass('left_nemu_content_selected');
+    $("#stream").addClass('left_nemu_content');  
+    $("#follower").removeClass('left_nemu_content_selected');
+    $("#follower").addClass('left_nemu_content');  
+    $("#follow").removeClass('left_nemu_content_selected');
+    $("#follow").addClass('left_nemu_content');   
+    $("#history").removeClass('left_nemu_content_selected');
+    $("#history").addClass('left_nemu_content'); 
+
+    $("#stream_tab").css("display","none");
+    $("#follow_tab").css("display","none");
+    $("#follower_tab").css("display","none");
+    $("#history_tab").css("display","none");
+    $("#likes_tab").css("display","block");
+
+  }
+
+
+  // メニュークリック時
+  $(".left_nemu_content").on('click', function () {   
+    var self = $(this);
+    var id = $(self).attr("id");      
+
+    if(id == "follower"){
+      select_follower_tab();
+    }
+    else if(id == "follow"){
+      select_follow_tab();
+    }
+    else if(id == "stream"){
+      select_stream_tab();
+    }
+    else if(id == "history"){
+      select_history_tab();
+    }    
+    else if(id == "likes"){
+      select_likes_tab();
+    }    
+  });
+
+
+
+  // コメント削除ボタンクリック時
+  $(".comment_del_btn").on('click', function () {  
+    var self = $(this);
+    var id = $(self).attr("hint_id");      
+    // 親取得
+    var parent = $(self).parent(".comment_area");
+
+    // ajax
+    var data = {"hint_id": id};
+    var path = "/nerar/comment_del.php";
+
+    // 成功時
+    var sFun = function(data){
+      // 対象要素の削除
+      $(parent).animate({height: "hide", opacity: 0.2}, 300, "linear");
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+alert("Failed");
+    };
+
+    ajax("GET", path, data, sFun, eFun);
+
+  });
+
+
+  // コメント削除ボタンクリック時
+  $(".img_del_btn").on('click', function () {  
+    var self = $(this);
+    var token = $(self).attr("token");      
+    // 親取得
+    var parent = $(self).parent(".comment_area");
+
+    // ajax
+    var data = {"token": token};
+    var path = "/nerar/img_del.php";
+
+    // 成功時
+    var sFun = function(data){
+      // 対象要素の削除
+      $(parent).animate({height: "hide", opacity: 0.2}, 300, "linear");
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+alert("Failed");
+    };
+
+    ajax("GET", path, data, sFun, eFun);
+
+  });
+
+
+
+
+
+
+
+});
+
+//]]>
+</script>
+</head>
+<body>
+<div id="light_background">
+  <div id="detail" class="detail"></div>
+</div>
+
+{% include "/inc/header_navi.html" %} 
+
+  <div id="container_background">
+ 
+    <div id="left_nemu">
+      <div class="left_nemu_content_selected" id="stream">{% if is_self %}Timeline{% else %}History{% endif %}</div>
+      <div class="left_nemu_content" id="follow">Follow</div>
+      <div class="left_nemu_content" id="follower">Follower</div>
+      {% if is_self %}<div class="left_nemu_content" id="history">History</div> {% endif %}
+      {% if is_self %}<div class="left_nemu_content" id="likes">Likes</div> {% endif %}
+      <div id="mark"></div>        
+    </div>
+
+    <div id="content">
+
+      <!-- 自分自身のページみたとき -->
+      {% if is_self %}
+        <div id="stream_tab">
+          {% if stream %}
+            {% for key,val in stream %}
+              {% if val.division == 1 %}
+                <!-- コメント -->
+                <div class="comment_area">
+                  <div class="stream_title">{{ val.own_nick }} hinted on {{ val.nick }}'s contribution.</div> 
+                  <div class="date_time">{{ val.created }}</div>
+
+                  {% if val.file_name %}
+                    <a href="/nerar/detail.php?token={{ val.token }}">
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                        style="
+                            width:{{ val.width }}px;
+                            height:{{ val.height }}px; 
+                        "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+
+                </div>
+              {% else %}
+                <!-- 画像投稿 -->
+                <div class="comment_area">              
+                  <div class="stream_title">{{ val.own_nick }} contributed the picture.</div>
+                  <div class="date_time">{{ val.created }}</div>
+                  {% if val.file_name %}   
+                    <a href="/nerar/detail.php?token={{ val.token }}">             
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                          style="
+                              width:{{ val.width }}px;
+                              height:{{ val.height }}px; 
+                          "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+                </div>
+              {% endif %}
+
+
+            {% endfor %} 
+          {% else %}
+           <div class="not_follow_msg">フォローしているユーザがいません</div>
+          {% endif %}
+
+        </div>
+        <div id="follow_tab">
+          {% if follow_list %}
+            {% for key,val in follow_list %}       
+              <div class="comment_area">
+                <div class="stream_title">{{ val.nick }}</div> 
+                {% if val.profile_img %}               
+                  <img class="images" src="/nerar/profile_images/{{ val.profile_img }}"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >
+                {% else %}
+                  <img class="images" src="/nerar/common/img/logo_mint.png"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >                
+                {% endif %}
+
+                <div class="comment">{{ val.profile }}</div>
+
+              </div>
+            {% endfor %}           
+          {% else %}
+            <div class="not_follow_msg">フォローしているユーザがいません</div>
+          {% endif %}         
+        </div>
+        <div id="follower_tab">
+          {% if follower_list %}
+            {% for key,val in follower_list %}       
+              <div class="comment_area">
+                <div class="stream_title">{{ val.nick }}</div>
+                {% if val.profile_img %}                 
+                  <img class="images" src="/nerar/profile_images/{{ val.profile_img }}"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >
+                {% else %}
+                  <img class="images" src="/nerar/common/img/logo_mint.png"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >                
+                {% endif %}
+
+                <div class="comment">{{ val.profile }}</div>
+
+              </div>
+            {% endfor %}             
+          {% else %}
+            <div class="not_follow_msg">フォローされていません</div>
+          {% endif %} 
+        </div>
+
+        <div id="history_tab">
+
+          {% if history %}
+            {% for key,val in history %}
+              {% if val.division == 1 %}
+                <!-- コメント -->
+                <div class="comment_area">
+                  <div class="stream_title">{{ val.own_nick }} hinted on {{ val.nick }}'s contribution.</div> 
+
+                  <div class="comment_del_btn"
+                        hint_id={{ val.hint_id }}
+                  >
+                    <img class='ok_ng_style' src='/nerar/common/img/ng.png'>
+                  </div>
+
+                  <div class="date_time">{{ val.created }}</div>
+
+                  {% if val.file_name %}
+                    <a href="/nerar/detail.php?token={{ val.token }}">
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                        style="
+                            width:{{ val.width }}px;
+                            height:{{ val.height }}px; 
+                        "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+
+                </div>
+              {% else %}
+                <!-- 画像投稿 -->
+                <div class="comment_area">              
+                  <div class="stream_title">{{ val.own_nick }} contributed the picture.</div>
+
+                  <div class="img_del_btn"
+                        token={{ val.token }}
+                  >
+                    <img class='ok_ng_style' src='/nerar/common/img/ng.png'>
+                  </div>
+
+                  <div class="date_time">{{ val.created }}</div>
+                  {% if val.file_name %}   
+                    <a href="/nerar/detail.php?token={{ val.token }}">             
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                          style="
+                              width:{{ val.width }}px;
+                              height:{{ val.height }}px; 
+                          "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+                </div>
+              {% endif %}
+            {% endfor %} 
+          {% else %}
+           <div class="not_follow_msg">あなたが投稿した情報はありません</div>
+          {% endif %}
+
+
+        </div>  
+
+
+        <div id="likes_tab">
+          {% for key,val in likes %}          
+            <div class="comment_area">              
+              <div class="stream_title">{{ val.nick }}</div>
+              <div class="date_time">{{ val.created }}</div>
+              {% if val.file_name %}   
+                <a href="/nerar/detail.php?token={{ val.token }}">             
+                  <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                      style="
+                          width:{{ val.width }}px;
+                          height:{{ val.height }}px; 
+                      "
+                  >
+                </a>
+              {% else %}
+                <img class="images" src="/nerar/common/img/logo_mint.png"
+                  style="
+                    width:150px;
+                    height:150px; 
+                  "
+                >                
+              {% endif %}
+              <div class="comment">{{ val.comment }}</div>
+            </div>
+          {% endfor %}
+        </div>  
+
+
+      <!-- 他人のページみたとき -->
+      {% else %}
+          <!-- 該当ユーザの情報 -->
+          <div class="view_user_area">
+            <div class="view_user_nick">{{ view_nick }}</div>
+            {% if view_profile_img %}
+              <a href="/nerar/detail.php?token={{ val.token }}">
+                <img class="view_user_image" src="/nerar/profile_images/{{ view_profile_img }}"
+                  style="
+                      width:200px;
+                      height:200px; 
+                  "
+                >
+              </a>
+            {% else %}
+              <img class="view_user_image" src="/nerar/common/img/logo_mint.png"
+                style="
+                    width:150px;
+                    height:150px; 
+                "
+              >                
+            {% endif %}        
+            <!-- follow,unfollow bottn set -->
+            <div class="follow_btn_area">
+              {% include "/inc/follow_btn_set.html" %} 
+            </div>            
+
+            <div class="view_user_profile">{{ view_profile }}</div>
+
+          </div>
+
+          <div class="view_user_border"></div>
+
+          
+          <div id="stream_tab">
+          {% if view_stream %}
+            {% for key,val in view_stream %}
+              {% if val.division == 1 %}
+                <!-- コメント -->
+                <div class="comment_area">
+                  <div class="stream_title">{{ val.own_nick }} hinted on {{ val.nick }}'s contribution.</div> 
+                  <div class="date_time">{{ val.created }}</div>
+
+                  {% if val.file_name %}
+                    <a href="/nerar/detail.php?token={{ val.token }}">
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                        style="
+                            width:{{ val.width }}px;
+                            height:{{ val.height }}px; 
+                        "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+
+                </div>
+              {% else %}
+                <!-- 画像投稿 -->
+                <div class="comment_area">              
+                  <div class="stream_title">{{ val.own_nick }} contributed the picture.</div>
+                  <div class="date_time">{{ val.created }}</div>
+                  {% if val.file_name %}   
+                    <a href="/nerar/detail.php?token={{ val.token }}">             
+                      <img class="images" src="/nerar/images/mini/{{ val.file_name }}"
+                          style="
+                              width:{{ val.width }}px;
+                              height:{{ val.height }}px; 
+                          "
+                      >
+                    </a>
+                  {% else %}
+                    <img class="images" src="/nerar/common/img/logo_mint.png"
+                      style="
+                        width:150px;
+                        height:150px; 
+                      "
+                    >                
+                  {% endif %}
+
+                  <div class="comment">{{ val.comment }}</div>
+                </div>
+              {% endif %}
+
+
+            {% endfor %} 
+          {% else %}
+           <div class="not_follow_msg">該当ユーザの投稿内容はありません</div>
+          {% endif %}
+
+        </div>
+        <div id="follow_tab">
+          {% if view_follow_list %}
+            {% for key,val in view_follow_list %}       
+              <div class="comment_area">
+                <div class="stream_title">{{ val.nick }}</div> 
+                {% if val.profile_img %}               
+                  <img class="images" src="/nerar/profile_images/{{ val.profile_img }}"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >
+                {% else %}
+                  <img class="images" src="/nerar/common/img/logo_mint.png"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >                
+                {% endif %}
+
+                <div class="comment">{{ val.profile }}</div>
+
+              </div>
+            {% endfor %}           
+          {% else %}
+            <div class="not_follow_msg">該当ユーザがフォローしているユーザはいません</div>
+          {% endif %}         
+        </div>
+        <div id="follower_tab">
+          {% if view_follower_list %}
+            {% for key,val in view_follower_list %}       
+              <div class="comment_area">
+                <div class="stream_title">{{ val.nick }}</div>
+                {% if val.profile_img %}                 
+                  <img class="images" src="/nerar/profile_images/{{ val.profile_img }}"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >
+                {% else %}
+                  <img class="images" src="/nerar/common/img/logo_mint.png"
+                    style="
+                        width:150px;
+                        height:150px; 
+                    "
+                  >                
+                {% endif %}
+
+                <div class="comment">{{ val.profile }}</div>
+
+              </div>
+            {% endfor %}             
+          {% else %}
+            <div class="not_follow_msg">該当ユーザは誰にもフォローされていません</div>
+          {% endif %} 
+        </div>
+      {% endif %}
+
+
+    
+    </div>
+
+
+
+  </div> 
+
+</div>
+
+{% include "/inc/hot_tags.html" %} 
+
+</body>
+</html>

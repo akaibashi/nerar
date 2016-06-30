@@ -1,0 +1,70 @@
+<!-- facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="header">
+
+
+  <div class="title"><a href="/nerar/"><img src="/nerar/common/img/logo.png" widht="220px" height="60px"></a></div>
+  <div class="login_logout">
+    {% if is_login %}
+        <img class="profile_img" src="/nerar/profile_images/{{ profile_img }}"> 
+        <div class="nick">Hi, {{ nick }} </div> 
+        <a href="/nerar/google_login/logout.php?logout"><div class="login_logout_box">Logout</div></a>
+        <a href="/nerar/setting.php"><div class="login_logout_box">Settings</div></a>
+
+    {% else %}
+      <a href="/nerar/google_login/?login&oauth_provider=google"><div class="login_logout_box">Login</div></a>
+    {% endif %}
+  </div>
+</div>
+<div class="box">
+
+
+<div class="header_social_btn_set">
+  <div class="facebook_btn">
+    <div class="fb-like" data-href="http://hinto.me/nerar/" data-send="true" data-layout="button_count" data-width="100" data-show-faces="true" data-font="lucida grande"></div>
+  </div>
+  <div class="twitter_btn">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://hinto.me/nerar/" data-lang="ja">ツイート</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+</div>
+
+
+
+
+    {% if is_login %}
+      <div class="menu_container_login">      
+        <a href="/nerar/dash_board.php?mode=self"><div class="box-menu">DashBoard</div></a>      
+
+        <div class="search_container">
+          <form name="searchform" method="get" action="/nerar/search.php" class="searchform">
+            <input name="keywords" type="text" {% if keywords %}value="{{keywords}}"{% else %}value="Please input tag.."{% endif %} class="keywords" />
+            <input type="submit" class="searchBtn" value="" >
+          </form>
+        </div>
+
+        <div class="box-menu" id="hot_tags_btn_login">Hot Tags</div>  
+        <a href="/nerar/upload.php"><div class="box-menu">Upload</div></a>    
+      </div>
+    {% else %}
+      <div class="menu_container_nologin">         
+
+        <div class="search_container">
+          <form name="searchform" method="get" action="/nerar/search.php" class="searchform">
+            <input name="keywords" type="text" {% if keywords %}value="{{keywords}}"{% else %}value="Please input tag.."{% endif %} class="keywords" />
+            <input type="submit" class="searchBtn" value="" >
+          </form>
+        </div>
+
+        <div class="box-menu" id="hot_tags_btn_nologin">Hot Tags</div> 
+      </div>
+    {% endif %}
+</div>

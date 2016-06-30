@@ -1,0 +1,703 @@
+{% if is_pjax %}
+{% else %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="/nerar/common/css/common_style.css" />  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>  
+  <script src="/nerar/common/js/bonsai.js"></script>  
+  <script src="/nerar/common/js/tag_canvas.js" type="text/javascript"></script>  
+  <script src="/nerar/common/js/common_use.js" type="text/javascript" charset="UTF-8"></script>
+<!-- IEを撲滅するため無条件でエラー --> 
+<!--[if IE ]>
+<script>
+(function($){
+
+    location.href="/nerar/ie_information.php";  
+})();
+
+/*
+    $(document).ready( function(){
+    // IE用のエラーページへ遷移させる
+    location.href="/nerar/ie_information.php";    
+    });
+*/
+</script>
+<![endif]-->
+
+{% endif %}
+    <script src="/nerar/common/js/farbtastic.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/nerar/common/css/farbtastic.css" type="text/css" />
+  <style>
+  
+  /* Write code */
+  #player{
+    border: solid #EEE;
+    height: {{height}}px;
+    width: {{width}}px;
+    position: relative;
+  }
+  #content{
+    top: 30px;
+    float:left;
+    position: relative;
+  }
+  .colornav{
+    {% if not is_login %} display:none; {% endif %}
+  }
+  .input_form_btn_add{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  background: #ffffff;  
+  border:1px solid #ad9c9c;
+  text-align: center;
+  width: 120px;
+  height: 59px;  
+  line-height: 59px; 
+  font-size: 16px;
+  border-width: 3px;1
+  float:right;
+  color : #ad9c9c;  
+  z-index:2;
+
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease; 
+  }
+  .input_form_btn_add:hover{
+    background-color:#c1e4e9;
+  }
+  .input_form_comment {
+    color: #AD9C9C;
+    float: left;
+    text-align: center;
+    font-size: 20px;
+    width: 100px;
+    height: 75px;
+    border: 2px solid #E8E8E8;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    z-index:2;
+  }
+  .hintnav {
+    position: relative;
+    min-width: 1280px;
+    top: 30px;
+    height: 30px;
+    background: #ffffff;
+    width: 100%;
+    padding: 0 0;
+    text-align: center;
+    color : #ad9c9c;
+    border-top:1px solid rgba(0,0,0,0.1);
+    border-bottom:1px solid rgba(0,0,0,0.2);
+    box-shadow:1px 1px 2px rgba(0,0,0,0.2);
+    text-align: center;
+    float:left;
+  }
+  ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  ul li {
+    display: table-cell;
+    *display: inline;  
+    *zoom: 1;
+    padding: 5px;
+    background: #000000;
+    color: #ffffff;
+  }
+  #colorpicker{
+    position: relative;
+    top: 35px;
+    float: left;
+  }
+  </style>
+      <script type="bs" id="bs">
+      /* 初期値 */
+      var x,y,m,w,h;
+      var judge;
+      var MAX_W,MAX_H,WIDTH,HEIGHT;
+      //オブジェクトのサイズ
+      m = 1; //倍率(magnification)
+      var gazou = '{{img_url}}'  == '/nerar/upload_file/origin/.jpg' ? '/nerar/common/img/logo.png' :  '{{img_url}}' ;
+      var dlog = {};
+      dlog = parent.window.dlog;
+      var clickflg = true;
+      
+      /*
+        inputdsp
+        入力項目の表示
+        svgでの入力項目表示は不可。
+        既存のinputtypeを利用する。
+      */
+      var input_dsp =  function(x,y){
+        x = x + parent.document.getElementById('player').offsetLeft;
+        y = y + parent.document.getElementById('player').offsetTop;
+        //texttype
+        parent.document.getElementById('commentadd').style.left = String(x - 50 ) + "px";
+        parent.document.getElementById('commentadd').style.top = String(y - 95 ) + "px";
+        parent.document.getElementById('commentadd').style.position = "absolute";
+        parent.document.getElementById('commentadd').style.display = "";
+        parent.document.getElementById('commentadd').focus();
+        //buttontype
+        parent.document.getElementById('btn_commentadd').style.left = String(x + 60 ) + "px";
+        parent.document.getElementById('btn_commentadd').style.top = String(y - 20 ) + "px";
+        parent.document.getElementById('btn_commentadd').style.position = "absolute";
+        parent.document.getElementById('btn_commentadd').style.display = "";
+      }
+
+      /* start hint Draw */
+      /*
+        PointX    : クリック位置X
+        PointY    : クリック位置Y
+        Comment   : 出力コメント
+        Angle : 位置(角度)
+      */
+      
+      var dispload = function(){
+        
+        new Bitmap(gazou).on('load', function() {
+          this.addTo(stage);
+          {% if hint_list %}
+          for(var i=0; i<=dlog.length-1; i++){
+            hint(
+                parseFloat(dlog[i].pos.x)
+              , parseFloat(dlog[i].pos.y)
+              , dlog[i].comment
+              , parseFloat(dlog[i].pos.angle)
+              , parseFloat(dlog[i].color.r)
+              , parseFloat(dlog[i].color.g)
+              , parseFloat(dlog[i].color.b)
+              , parseFloat(dlog[i].color.p)
+              , parseFloat(dlog[i].rect.x)
+              , parseFloat(dlog[i].rect.y)
+            );
+          }
+          {% endif %}
+        }).attr({height:{{height}},width:{{width}}});
+      }
+      
+      var hint = function(PointX,PointY,Comment,Angle,color_r,color_g,color_b,color_p,rect_x,rect_y){
+        var x,y;
+        var _Angle;
+        x = PointX;
+        y = PointY;
+        var WIDTH = 100 ; //幅 
+        var HEIGHT = 100 ; //高
+        var LINE_RIGHT = 49;
+        var LINE_TOP = -100; 
+        //最大値、最小値は相対比で求める
+        var RECTMIN = -30;
+        var RECTMAX = 100;
+        
+        /* start Group Add */
+        /* Hint Group */
+        var AllGroup = new Group();
+        AllGroup.attr({x:x 
+          , y:y 
+          , opacity : 0
+        });
+        AllGroup.addTo(stage);
+        
+        /* Hint Point Group */
+        var hPGroup = new Group();
+        hPGroup.addTo(AllGroup);
+        var hPoint;
+        
+        /* Hint Rect Group */
+        var hRGroup = new Group();
+        hRGroup.addTo(AllGroup);
+        var hRect;
+        var hRect_Line_r;
+        
+        /* Hint Sharp Group */
+        var hSGroup = new Group();
+        hSGroup.addTo(AllGroup);
+        var hSharp;
+        
+        /* Hint Text Group */
+        var hTGroup = new Group();
+        hTGroup.addTo(AllGroup);
+        var hText;
+        
+        /* Hint Text Group */
+        var hDGroup = new Group();
+        hDGroup.addTo(AllGroup);
+/*         var hCrossCircle; */
+        var hCrose1;
+        var hCrose2;
+                
+        var hColor = 'rgba(' + color_r + ' ,' + color_g + ' ,' + color_b + ' ,' +  color_p + ' )';
+        
+        
+        /* start Group Add */
+        
+        /* start Object Create */
+        
+        
+        /* Hint Point */
+        //初期角度
+        AllGroup.attr({rotation: Math.PI/180 * Number(Angle)});
+        
+        var drawPoint = function(){
+          hPoint = new Circle(0, 0, 8).addTo(hPGroup).stroke('red',0.7);
+          hPoint.attr({
+            cursor: 'pointer'
+          });
+        }
+
+        /* HintRect */
+        var drawRect = function(rectX,rectY,rectW,rectH){
+          var _rectX = -50;
+          var _rectY = LINE_TOP;
+          var _rectW = WIDTH ;
+          var _rectH = HEIGHT - 15;
+          var _marumi = 30;
+          hRect = new Rect(_rectX , _rectY , _rectW , _rectH , _marumi );
+          hRect.addTo(hRGroup); 
+          hSharp.stroke(color('rgba(0,0,0,0)'),0);
+          hRect.attr({
+            fillColor : color(hColor)
+          });
+          
+          /* 長さ変更用 */
+          /* Line_Right */
+          hRect_Line_r = new Rect(_rectW+_rectX-1,_rectY+_marumi,1,_rectH-_marumi*2);
+          hRect_Line_r.addTo(hRGroup);
+          hRect_Line_r.stroke(color('rgba(0,0,0,0)'),1);
+          hRect_Line_r.attr({
+            cursor: 'pointer'
+          });
+        }
+        
+        /* HintSharp */
+        var drawSharp = function(){
+          hSharp = new Path([
+            ['moveTo', -15, -15]
+            , ['lineBy', 15, 15]
+            , ['lineBy', 15, -15]
+            , ['lineBy', -30, 0]
+          ]);
+          hSharp.addTo(hSGroup);
+          hSharp.stroke(color('rgba(0,0,0,0)'),0);
+          hSharp.attr({
+            fillColor: color(hColor)
+          });
+        }
+        
+        /* Hint Text */
+        var drawText = function(){
+          var foo = Comment ? Comment : '';
+          hText = new Text(decodeURIComponent(foo));
+          hText.addTo(hTGroup); 
+          hText.attr({
+            x:-50
+            , y:-75
+            , fontFamily: 'Arial, sans-serif'
+            , fontSize: '13'
+            , textFillColor: color('rgba(16,16,16,.9)')
+          });
+        }
+        
+        /* Hint DeleteButton */
+        /* Double Click only */
+        var drawCross = function(){
+          //CIrcle
+          var _x,_y,_color,_s,_c;
+          _x = 55;
+          _y = -105;
+          _color = 'rgba(32,32,32,1)';
+          _s = 2;
+          _c = 8;
+          hCrossCircle = new Circle(_x, _y, _c);
+          hCrossCircle.addTo(hDGroup);  
+          hCrossCircle.attr({
+            fillColor: color('rgba(210,147,140,1)')
+          })
+          
+          //Cross
+          hCross1 = new Path([
+            ['moveTo', _x-_c/2, _y-_c/2]
+            , ['lineBy', _c, _c ]
+          ]).addTo(hDGroup);
+          hCross1.stroke(color(_color),_s);
+          hCross2 = new Path([
+            ['moveTo', _x+_c/2, _y-_c/2]
+            , ['lineBy', -_c, _c]
+          ]).addTo(hDGroup);
+          hCross2.stroke(color(_color),_s);
+        }
+        
+        //Create
+        drawPoint();
+        drawSharp();
+        drawRect();
+        drawText();
+        if(judge){
+          drawCross();
+        }
+        /* end Object Create */
+        
+        /* 
+          Event Start
+        */
+        
+        //DeleteButton押した時
+        hDGroup.on('multi:pointerdown',function(e) {
+          hDGroup.removeChild(hCrossCircle);
+          hDGroup.removeChild(hCross1);
+          hDGroup.removeChild(hCross2);
+          AllGroup.removeChild(hDGroup);
+          stage.removeChild(AllGroup);
+          parent.document.getElementById('commentadd').style.display= 'none';
+          parent.document.getElementById('btn_commentadd').style.display= 'none';
+          dispload();
+          parent.document.getElementById("comment_judgment").checked = true;
+        });
+        
+        //ObjectDown時、属性変更
+        var eventRectMove = function(){
+          var _dragx,_dragy;
+          AllGroup.on('multi:pointerdown', function(e) {
+           //色変更
+{% if is_login %}
+            var _color_r =  parent.getColor('r');
+            var _color_g =  parent.getColor('g');
+            var _color_b =  parent.getColor('b');
+            var _color_p =  parent.getColor('p');
+            var _rgba = 'rgba(' + _color_r + ',' + _color_g + ',' + _color_b +',' + _color_p +')';
+            hRect.attr({fillColor:_rgba});
+            hSharp.attr({fillColor:_rgba});
+{% endif %}
+            clickflg = false;
+            
+            // Catch new x/y at beginning of drag
+            _dragx = this.attr('x');
+            _dragy = this.attr('y');
+            AllGroup.addTo(stage);
+          });
+          
+          //RectDrag時、移動
+          hRect.on('multi:drag', function(e){
+            var _x,_y;
+            _x = _dragx + e.diffX
+            _y = _dragy + e.diffY
+            AllGroup.attr({
+               x: _x
+              , y: _y
+            })
+            parent.window.posChangeValue(_x,'x');
+            parent.window.posChangeValue(_y,'y');
+          }).on('multi:pointerup',function(e){
+            var allx,ally;
+            allx = AllGroup.attr('x');
+            ally = AllGroup.attr('y');
+            {% if is_login %}
+            var _jud = parent.document.getElementById("comment_judgment").checked;
+            if(!_jud){
+              input_dsp(allx,ally);
+            }
+            {% endif %}
+          });
+        }
+        eventRectMove();
+        
+        /**
+         * Rectの大きさを変更
+         */
+        var eventRectLine = function(){
+          var _dragw;
+          var _dragx;
+          hRect_Line_r.on('mouseover',function(e){
+            this.stroke(color('rgba(255,0,0,0.7)'),1.7);
+          }).on('multi:pointerdown',function(e){
+            _dragw = hRect.attr('width');
+            _dragx = hRect_Line_r.attr('x');
+          }).on('multi:drag',function(e){
+            var _x,_w;
+            _w = _dragw+e.diffX;
+            _x = _dragx+e.diffX;
+            //最小制御
+            if(WIDTH+RECTMIN > _w){
+              _w = WIDTH+RECTMIN;
+              _x = LINE_RIGHT+RECTMIN;
+            }
+            //最大制御
+            if(WIDTH+RECTMAX < _w){
+              _w = WIDTH+RECTMAX;
+              _x = LINE_RIGHT+RECTMAX;
+            }
+            hRect.attr({
+              width: _w
+            });
+            this.attr({
+               x: _x
+            });
+          }).on('mouseout',function(e){
+            this.stroke(color('rgba(0,0,0,0)'),0);
+          });
+        };
+        eventRectLine();
+        
+        hPoint.on('multi:drag',function(e){
+          var _rad = Number(Math.atan2(e.diffY, e.diffX)/Math.PI);
+          AllGroup.attr({rotation: _rad*3});
+          parent.window.posChangeValue(parseInt(_rad*180),'Angle');
+        });
+        
+        /* load Event */
+        /* AnimationEvent */
+        
+        //SharpGroup 
+        //AllGroup 
+        AllGroup.animate('2s', {
+          opacity: 1
+        }, 
+        { easing: 'quartOut'});
+      }
+      
+      /* End hint draw */
+      
+      stage.on('multi:pointerdown', function(e) {
+        judge = parent.document.getElementById("comment_judgment").checked;
+        parent.document.getElementById('commentadd').blur();
+        if(judge && clickflg){
+          //新規入力時
+          var _PointX = e.stageX;
+          parent.window.posChangeValue(e.stageX,"x");
+          var _PointY = e.stageY;
+          parent.window.posChangeValue(e.stageY,"y");
+          var _Angle =0;
+          var _color_r =  String(parent.getColor('r'));
+          var _color_g =  String(parent.getColor('g'));
+          var _color_b =  String(parent.getColor('b'));
+          var _color_p =  String(parent.getColor('p'));
+          stage.displayList.clear();
+          new Bitmap(gazou).addTo(stage).attr({height:{{height}},width:{{width}}});
+          hint(
+            _PointX
+            ,_PointY
+            ,parent.document.getElementById('commentadd').value
+            ,0
+            , _color_r
+            , _color_g
+            , _color_b
+            , _color_p
+          );
+          //入力フォームの表示
+          parent.document.getElementById("comment_judgment").checked = false;
+          input_dsp(_PointX,_PointY);
+        }
+        clickflg = true;
+      });
+      
+      dispload();
+      
+      </script>
+
+{% if is_pjax %}
+{% else %}
+</head>
+<body>
+
+{% include "/inc/header_navi.html" %} 
+{% endif %}
+    <div class="follow_btn_area">
+    {% if is_followdsp %}
+      {% include "/inc/follow_btn_set.html" %} 
+    {% endif %}
+    </div>
+      <ul class="hintnav">
+        <li><input type="checkbox" name="comment_judgment" id="comment_judgment" {% if is_login %} checked="true"{% else %} checked="false" style="display:none;" {% endif %}></li>
+        <li>カラー<input type="text" id="color" name="color" value="#123456" size="7" maxlength="7" onfocus="color_focus();" onblur="color_blur();" /></li>
+        <li>透明度スライダー<input type="range" name="color_p" id="color_p" min="0" max="1" step="0.1" value="1" onchange="colorChangeValue(this.value,this.name)">:<span id="color_p_val">1</span></li>
+        <li><span>x</span><input type="text" id="x_val" value="0"></li> 
+        <li><span>y</span><input type="text" id="y_val" value="0"></li> 
+        <li><span>r</span><input type="text" id="Angle_val" value="0"></li>
+      </ul>
+    <div id="colorpicker" style="display:none;"></div>
+    <div id="content" >
+      <div id="player"></div>
+      <script type="text/javascript">
+{% set dlogflg = true %}
+        dlog = [{% for key,val in hint_list %} {% if dlogflg %}  {% set dlogflg = false %} {% else %} 
+                  , {% endif %} { id:'{{ val.id }}', image_id:'{{ val.image_id }}', user_id:'{{ val.user_id }}', pos:{x:'{{ val.x }}', y:'{{ val.y }}',angle:'{{ val.angle }}'}, rect:{x:'{{ val.rec_x }}', y:'{{ val.rec_y }}'}, comment:'{{ val.comment }}', color:{r:'{{ val.color_r }}',g:'{{ val.color_g }}',b:'{{ val.color_b }}',p:'{{ val.color_p }}'}} {% endfor %}  ];
+                  
+        function colorChangeValue(value,name) {
+            document.getElementById(name + "_val").innerHTML = value; 
+            $('#color').css('opacity', value);
+            $('#colorpicker').css('opacity', value);
+        }
+        function posChangeValue(value,name) {
+            document.getElementById(name + "_val").value = value; 
+        }
+        function color_focus(){
+          document.getElementById('colorpicker').style.display="";
+        }
+        function color_blur(){
+          document.getElementById('colorpicker').style.display="none";
+        }
+        /*
+         * ajax通信
+         */
+        function follow_ajax(method, path, data, callback, errcallback) {
+          $.ajax({
+            type: method,
+            url: path,
+            cache: false,
+            data: data,
+            success: callback,
+            error: errcallback
+          });
+        }
+        
+        /*  
+         *  color取得 & 変換
+         */ 
+        
+        function getColor(c){
+          var _picker = function(_l){
+            var val = document.getElementById('color').value
+            return parseInt(val.slice(_l,_l+2),16);
+          }
+          switch (c){
+            case 'r':
+              return _picker(1)
+              break;
+            case 'g':
+              return _picker(3)
+              break;
+            case 'b':
+              return _picker(5)
+              break;
+            case 'p':
+              return parseFloat(document.getElementById('color_p').value)
+              break;
+          }
+        }
+      
+      /* 登録関係 */
+      var player = document.getElementById('player');
+      bonsai.setup({
+        runnerContext: bonsai.IframeRunnerContext
+      }).run(player, {
+          code: document.getElementById('bs').innerHTML,
+          height: {{height}},
+          width: {{width}},
+          framerate: 50
+        });
+        
+        
+      {% if is_login %}
+      var comment_click = function() {   
+        // フォロー解除フラグ設定 0:フォロー解除　1:フォロー
+        var data = {"is_comment": document.getElementById('commentadd').value,
+                    "user_id": {{ user_id }},
+                    "image_id": {{ image_id }},
+                    "posx" : parseInt(document.getElementById('x_val').value),
+                    "posy" : parseInt(document.getElementById('y_val').value),
+                    "angle" : parseFloat(document.getElementById('Angle_val').value),
+                    "color_r" : getColor('r'),
+                    "color_g" : getColor('g'),
+                    "color_b" : getColor('b'),
+                    "color_p" : getColor('p'),
+                    "rect_x" : 100,
+                    "rect_y" : 100
+                    };
+        var path = "/nerar/comment.php";
+        // 成功時
+        var sFun = function(data){
+          var retData = JSON.parse(data);
+          if (retData && (retData["is_success"] == "true")){
+            alert('comment throw');
+            dlog.push({ 
+            id: String(parseInt(Math.random() * 100))
+              , image_id:'{{ image_id }}'
+              , user_id:'{{ user_id }}'
+              , pos:{
+                x:document.getElementById('x_val').value
+                , y: document.getElementById('y_val').value
+                , angle: document.getElementById('Angle_val').value
+              }
+              , rect:{
+                x: String(100)
+                , y:String(100)
+              }
+              , comment: document.getElementById('commentadd').value
+              , color:{ 
+                r: getColor('r')
+                , g: getColor('g')
+                , b: getColor('b')
+                , p: getColor('p')
+              }
+            });
+            
+            document.getElementById('player').removeChild(document.getElementById('player').childNodes.item(0));
+            document.getElementById('btn_commentadd').style.display ='none';
+            document.getElementById('commentadd').value = '';
+            document.getElementById('comment_judgment').checked = 'true';
+            bonsai.run(player, {
+                code: document.getElementById('bs').innerHTML,
+                height: {{height}},
+                width: {{width}},
+                framerate: 50
+              });
+          }else{
+            // エラー
+            alert("sorry, proccess is failed!");
+          }
+        };
+        // 失敗時
+        var eFun = function(data) {
+          // エラー
+          alert("sorry, proccess is failed!");      
+        };
+    
+        follow_ajax("GET", path, data, sFun, eFun);
+      };
+      
+      {% endif %}
+      
+        $(document).ready(function() {
+           $('#colorpicker').farbtastic('#color');
+           $('#color').css('opacity', document.getElementById('color_p').value);
+           $('#colorpicker').css('opacity', document.getElementById('color_p').value);
+        });
+        
+
+      </script>
+      <div class="commentadd">
+        <input id="commentadd" class="input_form_comment" type="text" value="" style="display:none;" onblur="this.style.display ='none' "/>
+        <input id="btn_commentadd" class="input_form_btn_add" type="button" value=" inHint " style="display:none;"/>
+      </div>
+    </div>
+
+
+
+{% if is_pjax %}
+    <script>
+  {% if is_login %}
+      //コメントする
+  $("#btn_commentadd").on('click', comment_click);
+      {% endif %}
+    </script>
+{% else %}
+{% include "/inc/hot_tags.html" %} 
+    <script>
+  {% if is_login %}
+      //コメントする
+      $("#btn_commentadd").on('click', comment_click);
+  {% endif %}
+    </script>
+</body>
+</html>
+{% endif %}

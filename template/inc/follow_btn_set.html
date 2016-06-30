@@ -1,0 +1,93 @@
+<div class="follow_area">
+  <div id="un_follow_btn">UnFollow</div>
+  <div id="follow_btn">Follow</div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+  /*
+   *
+   * ajax通信
+   *
+   */
+  function follow_ajax(method, path, data, callback, errcallback) {
+    $.ajax({
+      type: method,
+      url: path,
+      cache: false,
+      data: data,
+      success: callback,
+      error: errcallback
+    });
+  }
+
+$(function(){
+
+  // フォローボタンの出し分け
+  {% if is_follow %}
+    $("#un_follow_btn").css("display","block");
+    $("#follow_btn").css("display","none");  
+  {% else %}
+    $("#un_follow_btn").css("display","none");
+    $("#follow_btn").css("display","block");  
+  {% endif %}
+
+  // フォロー解除する
+  $("#un_follow_btn").on('click', function () {   
+    // フォロー解除フラグ設定 0:フォロー解除　1:フォロー
+    var data = {"is_follow": 0,
+                "user_id": {{ user_id }},
+                "target_id": {{ target_id }}
+                };
+    var path = "/nerar/following.php";
+    // 成功時
+    var sFun = function(data){
+      var retData = JSON.parse(data);
+      if (retData && (retData["is_success"] == "true")){
+        $("#un_follow_btn").css("display","none");
+        $("#follow_btn").css("display","block");  
+      }else{
+        // エラー
+        alert("sorry, proccess is failed!");      
+      }
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+      // エラー
+      alert("sorry, proccess is failed!");      
+    };
+
+    follow_ajax("GET", path, data, sFun, eFun);
+  });
+
+  //フォローする
+  $("#follow_btn").on('click', function () {   
+    // フォロー解除フラグ設定 0:フォロー解除　1:フォロー
+    var data = {"is_follow": 1,
+                "user_id": {{ user_id }},
+                "target_id": {{ target_id }}
+                };
+    var path = "/nerar/following.php";
+    // 成功時
+    var sFun = function(data){
+      var retData = JSON.parse(data);
+      if (retData && (retData["is_success"] == "true")){
+        $("#un_follow_btn").css("display","block");
+        $("#follow_btn").css("display","none");  
+      }else{
+        // エラー
+        alert("sorry, proccess is failed!");      
+      }
+    };
+
+    // 失敗時
+    var eFun = function(data) {
+      // エラー
+      alert("sorry, proccess is failed!");      
+    };
+
+    follow_ajax("GET", path, data, sFun, eFun);
+  });
+});
+//]]>
+</script>

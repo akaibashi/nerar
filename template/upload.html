@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ title }}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/jquery.tagsinput.css"  charset="UTF-8" />
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/common_style.css" />
+<!--[if IE]><script type="text/javascript" src="/_lib/js/excanvas.js"></script><![endif]-->
+<!-- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/nerar/common/js/jquery.tagsinput.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/nerar/common/js/tag_canvas.js" type="text/javascript"></script>
+<script src="/nerar/common/js/common_use.js" type="text/javascript" charset="UTF-8"></script>
+
+<!-- IEを撲滅するため無条件でエラー --> 
+<!--[if IE ]>
+<script>
+(function($){
+
+    location.href="/nerar/ie_information.php";  
+})();
+
+/*
+    $(document).ready( function(){
+    // IE用のエラーページへ遷移させる
+    location.href="/nerar/ie_information.php";    
+    });
+*/
+</script>
+<![endif]-->
+
+
+<style type="text/css">
+/*<![CDATA[*/
+
+#container{
+  min-width: 1600px;   
+  clear:both;
+  top: 60px;
+  margin: 0 auto;  
+  margin-top:60px;
+  float:left;
+
+}
+
+
+/* タブ */
+.tab_btn_container{
+  float: left;
+  clear: both;
+  width: 90%;
+  height: auto;
+  border-width: 1px;  
+  border-bottom-style: solid;  
+  border-bottom-color: rgb(225, 223, 223);    
+}
+.tab_btn{
+  width: 120px;
+  height: 50px;
+  text-align: center;  
+  line-height: 50px; /* これするとテキストが中央寄せになる */   
+  float: left;
+  background: #faf7f7;
+  font-size: 18px;
+  border-width: 1px;
+
+  border-style: solid;  
+  border-color: #ebf6f7;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor:pointer;  
+}
+.tab{
+  float: left;
+  clear: both;
+}
+
+/* インターネットタブレイアウト */
+#internet_form{
+  float: left;
+  clear: both;
+}
+
+/* ローカルタブレイアウト */
+#local_form{
+  float: left;
+  clear: both;
+}
+
+/* インターネット画像のview */
+#internet_image_view{
+  float: left;
+  max-width: 768px;
+  max-height: 768px;
+  min-width: 256px;
+  min-height: 256px;  
+  border-width: 1px;
+  border-style: solid;  
+  border-color: #ebf6f7;
+  background-repeat: no-repeat;
+  background-position: center center;  
+}
+#internet_image_view_img {
+  max-width: 768px;
+  max-height: 768px;
+  top: 0;
+  left: 0;
+}
+
+.msg{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: right;  
+  font-size: 30px;
+  width: 768px;
+  height: 50px;
+}
+
+.row_msg{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: right;  
+  font-size: 25px;
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+
+}
+
+.form_style{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 25px;
+  width: 500px;
+  height: 30px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px; 
+}
+
+.form_textarea_style{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 25px;
+  width: 500px;
+  height: 100px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px; 
+  border-radius: 20px;   
+  resize:none;  
+}
+
+.messageCount{
+  color:green;
+}
+
+
+.tab_internet{
+  border-style:solid;
+  float:left;
+}
+
+
+
+.msg{
+  color: #ad9c9c;   
+  width:768px;
+  float:left;
+  clear:both;  
+}
+.ok_ng_style{
+  margin: 8px 8px 8px 8px;
+  padding: 8px 8px 8px 8px;  
+  float:left;
+  width:40px;
+  height:40px;
+}
+.complete_msg{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 30px;
+  width: 300px;
+  height: 50px;
+}
+
+.input_form_submit_btn_container{
+  text-align: center;    
+  float:left;
+  clear:both;
+  width:100%;
+  left:45%;
+}
+.input_form_btn_ng{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  background: #ffffff;  
+  border:1px solid #ad9c9c;
+  text-align: center;
+  width: 120px;
+  height: 59px;  
+  line-height: 59px; 
+  font-size: 25px;
+  border-width: 3px;
+  padding-left: 5px;
+  padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;  
+  float:right;
+  color : #ad9c9c;  
+
+  -webkit-transition: all 1s ease;
+     -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+       -o-transition: all 1s ease;
+          transition: all 1s ease; 
+}
+.input_form_btn_ng:hover{
+  background-color:#c1e4e9;
+}
+
+.file_select{
+/*  
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 25px;
+  width: 500px;
+  height: 100px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px; 
+  border-radius: 20px;   
+*/
+
+/*  position:   absolute;
+*/
+
+  top:        0;
+  left:       0;
+  width:      200px;
+  height:     40px;
+  /* IE以外 */
+  opacity:    0;
+  /* IE 8 */
+  -MS-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+
+}
+
+#file_select_dummy{
+  color: #ad9c9c;     
+  font-size: 25px;  
+  text-align: center;    
+  line-height: 40px; /* これするとテキストが中央寄せになる */     
+  width:      200px;
+  height:     40px;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;  
+  cursor:     pointer;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px; 
+  border-radius: 20px;  
+  -webkit-transition: all 1s ease;
+     -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+       -o-transition: all 1s ease;
+          transition: all 1s ease;   
+}
+#file_select_dummy:hover{
+  background-color:#c1e4e9;
+}
+#file_select_name{
+  color: #ad9c9c;   
+  font-size: 25px;  
+}
+
+/*]]>*/
+</style>
+<script type="text/javascript">
+//<![CDATA[
+
+$(function(){
+
+  // スクロール位置の保存
+  var scrollTop = 0;
+
+  // 初期表示時はインターネットタブを開く
+  $("#tab_internet").css("display",'block');
+  $("#tab_local").css("display",'none');
+  // 背景色も変える
+  $("#tab_internet_btn").css("background-color",'#c1e4e9');    
+  $("#tab_local_btn").css("background-image",'url("/nerar/common/img/background.png")');  
+
+  // ページが遷移するタイミングで呼ばれる
+  window.addEventListener("popstate", function(popStateEvent) {
+
+
+  }, false);
+
+  // タブの色を変える
+  // インターネットタブクリック時
+  $("#tab_internet_btn").click(function () {
+    $("#tab_internet_btn").css("background-image",''); 
+    $("#tab_internet_btn").css("background-color",'#c1e4e9'); 
+    $("#tab_local_btn").css("background-image",'url("/nerar/common/img/background.png")');    
+    $("#tab_internet").css("display",'block');
+    $("#tab_local").css("display",'none');
+  });
+  // ローカルタブクリック時
+  $("#tab_local_btn").click(function () {
+    $("#tab_local_btn").css("background-image",''); 
+    $("#tab_internet_btn").css("background-image",'url("/nerar/common/img/background.png")');     
+    $("#tab_local_btn").css("background-color",'#c1e4e9');        
+    $("#tab_local").css("display",'block');
+    $("#tab_internet").css("display",'none');
+  });
+
+  /* 画像のプレビューを表示 */
+  var img_timer;
+  var set_img = function setImg(){
+    var url = document.internet_form.target_link.value;
+    myimg = new Image() ;
+
+    myimg.onload = function() {
+      $("#internet_image_view").empty();    
+      $("#internet_image_view").append("<img id='internet_image_view_img' src = '" + url + "''>");
+    }
+    myimg.onerror = function() {  
+      $("#internet_image_view").empty();
+      $("#internet_image_view").append("<div><img src='/nerar/common/img/ng.png'></div>");     
+    }
+    myimg.src = url;        
+  }
+  // フォーカスが当たった場合に監視スタート
+  $("#internet_url").focus(function(){
+    // 1000ミリ秒間隔で呼び出す
+    img_timer = setInterval(set_img,100);   
+  });   
+  // フォーカスが外れたら監視解除
+  $("#internet_url").blur(function(){
+    clearTimeout(img_timer);
+  });   
+
+
+  /* 残り文字数の制御 */
+  // インターネットタブ用
+  var textarea_timer;
+  var oldvalue = "";
+  var input_check = function inputCheck(){
+    if(oldvalue != $("#internet_textarea").val()){
+      var current = 64 - $("#internet_textarea").val().length;
+
+      $("#internet_textarea_remain").text(current);
+      oldvalue = $("#internet_textarea").val();
+    }
+  };
+  // フォーカスが当たった場合に監視スタート
+  $("#internet_textarea").focus(function(){
+    // 1000ミリ秒間隔で呼び出す
+    textarea_timer = setInterval(input_check,100);   
+  });   
+  // フォーカスが外れたら監視解除
+  $("#internet_textarea").blur(function(){
+    clearTimeout(textarea_timer);
+  });  
+
+  // ローカルタブ用
+  var local_textarea_timer;
+  var local_oldvalue = "";
+  var input_check_local = function inputCheckLocal(){
+    if(local_oldvalue != $("#local_textarea").val()){
+      var current = 64 - $("#local_textarea").val().length;
+      $("#local_textarea_remain").text(current);
+      local_oldvalue = $("#local_textarea").val();
+    }
+  };
+  // フォーカスが当たった場合に監視スタート
+  $("#local_textarea").focus(function(){
+    // 1000ミリ秒間隔で呼び出す
+    local_textarea_timer = setInterval(input_check_local,100);   
+  });   
+  // フォーカスが外れたら監視解除
+  $("#local_textarea").blur(function(){
+    clearTimeout(local_textarea_timer);
+  });  
+
+
+  // tag設定
+  $('.tags').tagsInput({
+    'minChars' : 1,
+    'maxChars' : 64 
+    });
+
+  // オートコンプリート
+  //$('#tags').tagsInput({autocomplete_url:'http://myserver.com/api/autocomplete'});
+
+
+  // ダミーdivがクリックされたイベントをトリガーとしてファイルを選択させる
+  $('#file_select_dummy').click( function(){
+      $('#file_select').trigger('click');
+  });
+
+  // ファイルが選択されたイベントを取得
+  $('#file_select').change( function(){
+    var fileList = document.getElementById("file_select").files;
+    var list = "";
+    for(var i=0; i<fileList.length; i++){
+    list += fileList[i].name + "<br>";
+    }
+    document.getElementById("file_select_name").innerHTML = list;
+  });
+
+
+});
+
+
+
+//]]>
+</script>
+
+</head>
+<body>
+
+<div id="contents">
+  {% include "/inc/header_navi.html" %} 
+
+
+
+  <div id="container">
+
+    {% if img_upload_error %}
+    <div class="msg">
+      <img class='ok_ng_style' src='/nerar/common/img/ng.png'>
+      <div class="complete_msg">Failed!</div>
+    </div>
+    {% endif %}
+    {% if img_upload_complete %}
+    <div class="msg">
+      <img class='ok_ng_style' src='/nerar/common/img/ok.png'>
+      <div class="complete_msg">Complete!</div>
+    </div>
+    {% endif %}
+
+    <div class="tab_btn_container">
+       <div id="tab_internet_btn" class="tab_btn">Internet</div>
+       <div id="tab_local_btn" class="tab_btn">Upload</div>
+    </div>
+
+    <div id="tab_internet" class="tab">
+      <br />
+      <div class="msg">Please input URL of a picture.</div>
+      <form action="/nerar/upload.php" id="internet_form" method="post" enctype="multipart/form-data" name="internet_form">    
+        <table>
+          <tr>
+            <td class="row_msg">URL : </td>
+            <td><input type="text" name="target_link" id="internet_url" class="form_style" /></td>
+          </tr>
+          <tr>
+            <td class="row_msg">comment : <br /><div id="local_textarea_remain" class="messageCount"></div> </td>
+            <td>
+              <!--<input type="text" name="comment" class="form_style" />-->
+              <textarea name="comment" rows="4" cols="40" id="local_textarea" class="form_textarea_style" maxlength="64"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="row_msg">lock tags : </td>
+            <td><input name="lock_tags" class="tags" value="" /></td>
+          </tr>
+          <tr>
+            <td class="row_msg">public tags : </td>
+            <td><input name="tags" class="tags" value="" /></td>
+          </tr>
+        </table>
+        <input type="hidden" name="upload" value="net">
+
+        <div class="input_form_submit_btn_container">      
+          <input type="submit" value="submit" id="input_form_btn" class="input_form_btn_ng"/>
+        </div>
+      </form>
+      <!-- preview -->    
+      <div id="internet_image_view"></div>
+    </div>
+
+    <div id="tab_local" class="tab">
+      <br />  
+      <div class="msg">Please upload the picture in a your compter.</div>         
+      <form action="/nerar/upload.php" id="local_form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="upload" value="local">
+        <table>
+          <tr>
+            <td class="row_msg">file : </td>
+            <td>
+              <div id="file_select_dummy">choose a file.</div>
+              <div id="file_select_name"></div>
+            </td>
+          </tr>             
+          <tr>
+            <td class="row_msg">comment : <br /><div id="internet_textarea_remain" class="messageCount"></div> </td>
+            <td>
+              <textarea name="comment" rows="4" cols="40" id="internet_textarea" class="form_textarea_style" maxlength="64"></textarea>
+            </td>            
+          </tr>
+          <tr>
+            <td class="row_msg">lock tags : </td>
+            <td><input name="lock_tags" class="tags" value="" /></td>
+          </tr>
+          <tr>
+            <td class="row_msg">public tags : </td>
+            <td><input name="tags" class="tags" value="" /></td>
+          </tr>                 
+        </table>
+
+        <div class="input_form_submit_btn_container">      
+          <input type="submit" value="upload" id="input_form_btn" class="input_form_btn_ng"/>
+        </div>
+        <input type="file" class="file_select" name="upload_file" id="file_select" accept="image/jpeg,image/gif,image/png,image/bmp" />                    
+      </form>
+
+    </div>
+  </div>
+
+{% include "/inc/hot_tags.html" %} 
+
+</body>
+</html>

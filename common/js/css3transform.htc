@@ -1,0 +1,129 @@
+/*<public:attach event="oncontentready" onevent="CSS3Transform.play(element)" />*/
+
+/* CSS3 Transform for IE version: 2009/12/24 03:58:46
+ * (c) 2009 martin. http://p2b.jp
+ * This is licensed under the MIT License.
+*/
+var CSS3Transform = {
+ init : function(){
+  var d = document, relpath, scripts = d.getElementsByTagName('script');
+  for(var i = 0, l = scripts.length; i < l; i++){
+   relpath = scripts[i].getAttribute('src');
+   if(relpath.indexOf('css3transform.htc') !== -1){
+    CSS3Transform.path = relpath;
+    d.documentElement.addBehavior(relpath);
+   }
+  }
+ },
+ get : function(css){
+  return css['-webkit-transform'] || css['-moz-transform'] || css['transform'] || 0;
+ },
+ play : function(o){
+  var d = document;
+  if(o.nodeName=='HTML'){
+   var sheets = window.document.styleSheets, sheet, selector, csstext;
+   for(var i = 0, l = sheets.length; i < l; i++){
+    sheet = sheets[i];
+    if(sheet.media == 'all' || sheet.media == 'screen' || !sheet.media){
+     for(var j = 0, k = sheet.rules.length; j < k; j++){
+      selector = sheet.rules[j].selectorText;
+      csstext = CSS3Transform.get(sheet.rules[j].style);
+      if(csstext){
+       var ds = sheet.rules[j].style.cssText.indexOf('box-shadow') !== -1 ? 'dropshadow:1' : '';
+       if(/:hover/i.test(selector)) csstext = 'hover-' + csstext;
+       sheet.addRule(selector.replace(/\s*:hover/i, '.CSS3TransformHover'), 'behavior: url('+CSS3Transform.path+'); transform:' + csstext + ';' + ds);
+      }
+     }
+    }
+   }
+  } else {
+   o.style.filter = "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand')";
+   if(o.currentStyle['dropshadow']){
+    o.style.filter += "progid:DXImageTransform.Microsoft.dropshadow(enable=true,OffX=3, OffY=7, Color='#11000000', Positive='true')";
+   }
+   csstext = o.currentStyle['transform'];
+   var orgName = o.className;
+   o.className += " CSS3TransformHover";
+   if(o.currentStyle['transform'] != csstext){
+    if(o.currentStyle['transform'].indexOf('hover-') !== -1){
+     o.hover = o.currentStyle['transform'].replace('hover-', '');
+    }
+    o.className = orgName;
+   }
+   
+   var fx = csstext.split('(')[0];
+   var val = csstext.split('(')[1].replace(')', '');
+   CSS3Transform.apply(o, fx, val);
+   if(o.hover){
+    var fx = o.hover.split('(')[0];
+    var val = o.hover.split('(')[1].replace(')', '');
+    var matrices = o.filters.item(0);
+    var oVal = [matrices.M11, matrices.M21, matrices.M12, matrices.M22];
+    o.attachEvent("onmouseover", function(){ CSS3Transform.apply(o, fx, val)});
+    o.attachEvent("onmouseout", function(){ CSS3Transform.apply(o, 'matrix', oVal)});
+   }
+  }
+ },
+ apply : function(o, func, value){
+  var val, matrices = o.filters.item(0);
+  switch (func){
+   case 'matrix' :
+    val = typeof value == "string" ? value.replace(/\s*/g,'').split(',') : value;
+    matrices.M11 = Number(val[0]);
+    matrices.M21 = Number(val[1]);
+    matrices.M12 = Number(val[2]); 
+    matrices.M22 = Number(val[3]);
+    break;
+   case 'rotate' :
+    var deg = value.replace('deg', ''), rad = deg * Math.PI/180;
+    var cos = Math.cos(rad), sin = Math.sin(rad);
+    var w = o.offsetWidth, h = o.offsetHeight;
+    var css = o.style, matrices = o.filters.item(0);
+    matrices.M11 = cos; matrices.M12 = -sin;
+    matrices.M21 = sin; matrices.M22 = cos;
+    var mt = parseInt(o.currentStyle.marginTop), ml = parseInt(o.currentStyle.marginLeft);
+    css.marginTop =  mt + 1/2 * (h - w * sin - h * cos) + "px";
+    css.marginLeft = ml + 1/2 * (w - h * sin - w * cos) + "px";
+    break;
+   case 'scale' : case 'skew' :
+    val = value.split(',');
+    val[1] = val[1] ? val[1] : val[0];
+    if(func == 'scale'){
+     matrices.M11 = Number(val[0]); matrices.M22 = Number(val[1]);
+     matrices.M12 = matrices.M21 = 0;
+    } else {
+     val[0] = parseInt(val[0]); val[1] = parseInt(val[1]);
+     matrices.M11 = matrices.M22 = 1;
+     matrices.M12 = Math.tan(val[0] * Math.PI/180);
+     matrices.M21 = Math.tan(val[1] * Math.PI/180);
+    }
+    break;
+   case 'scaleX' : case 'skewX' :
+    if(func == 'scaleX'){
+     matrices.M11 = Number(value);
+     matrices.M12 = 0;
+     matrices.M21 = 0;
+     matrices.M22 = 1;
+    } else {
+     matrices.M11 = matrices.M22 = 1;
+     matrices.M12 = Math.tan(parseInt(value) * Math.PI/180);
+     matrices.M21 = 0;
+    }
+    break;
+   case 'scaleY' : case 'skewY' :
+    if(func == 'scaleY'){
+     matrices.M11 = 1;
+     matrices.M12 = 0;
+     matrices.M21 = 0;
+     matrices.M22 = Number(value);
+    } else {
+     matrices.M11 = matrices.M22 = 1;
+     matrices.M12 = 0;
+     matrices.M21 = Math.tan(parseInt(value) * Math.PI/180);
+    }
+    break;
+  }
+ }
+}
+
+if(!CSS3Transform.path) CSS3Transform.init();

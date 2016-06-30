@@ -1,0 +1,14 @@
+<div id="tag_canvas_background">
+  <div id="myCanvasContainer">
+    <canvas width="1024" height="1024" id="myCanvas">
+      <p>Anything in here will be replaced on browsers that support the canvas element</p>
+    </canvas>
+  </div>
+  <div id="tags">
+    <ul>
+    {% for key,val in hot_tags %}
+      <li><a href="/nerar/search.php?keywords={{ val.tag_name }}">{{ val.tag_name }}</a></li>
+    {% endfor %}     
+    </ul>
+  </div>
+</div>

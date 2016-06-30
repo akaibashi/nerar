@@ -1,0 +1,372 @@
+/* web font */
+@font-face {
+	font-family: lucida-grande;
+	src: url("/nerar/common/resource/lucida_grande.ttf") format("TrueType");
+}
+@font-face {
+  font-family: walkway;
+  src: url("/nerar/common/resource/Walkway_Expand_SemiBold.ttf") format("TrueType");
+}
+@font-face {
+  font-family: Omicz;
+  src: url("/nerar/common/resource/Omicz.ttf") format("TrueType");
+}
+@font-face {
+  font-family: X_BAMBI;
+  src: url("/nerar/common/resource/X_BAMBI.ttf") format("TrueType");
+}
+@font-face {
+  font-family: corda_light;
+  src: url("/nerar/common/resource/corda_light.ttf") format("TrueType");
+}
+
+/* リンクの文字色を変えない */
+a:link { color:#ad9c9c; text-decoration:none }
+a:visited { color:#ad9c9c; text-decoration:none }
+a:hover { color:#ad9c9c; text-decoration:none }
+a:active { color:#ad9c9c; text-decoration:none }
+
+html{
+    height:100%;
+}
+
+body {
+  font-family: "corda_light";
+  background: #ffffff;  
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;  
+  min-width: 1024px;   
+  width: 100%; 
+  height: 100%;  
+
+  background-image: url("/nerar/common/img/background_w.png");
+  
+}
+
+.header{
+  min-width: 1280px;   
+  margin:0 auto;
+  width:100%;
+  float:left;
+  z-index:2;
+  height:60px;
+  background-color:#ffffff;
+  position: relative;
+}
+.title{
+  text-align:right;
+  width:55%;
+  float:left;  
+}
+
+.login_logout{
+  text-align:center;
+  width:450px;
+  float:right;
+  margin-right:10px;
+}
+
+.noscroll{
+  position: fixed;
+  overflow-y: hidden;
+}
+
+.scroll{
+  position: static;  
+  overflow-y: static;
+}
+
+
+/* login logout */
+.login_logout_box{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  text-align: center;
+  width: 50px;
+  height: 60px;  
+  line-height: 60px; 
+  font-size: 14px;
+  border-width: 0px;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 8px;
+  float:right;
+  color : #ad9c9c;  
+
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+
+}
+.login_logout_box:hover{
+  background-color:#c1e4e9;
+}
+.nick{
+  text-align: right;
+  height: 60px;  
+  line-height: 60px; 
+  font-size: 13px;
+  border-width: 0px;
+  padding-left: 5px;
+  padding-right: 0px;
+  margin-left: 5px;
+  margin-right: 0px;  
+  float:right; 
+  color : #ad9c9c;  
+}
+
+
+.profile_img{
+  text-align: right;
+  width: 60px;
+  height: 60px;  
+  border-width: 0px;
+  float:right; 
+}
+
+
+
+/* 吸い付くメニュー */
+.box {
+  position: absolute;
+  min-width: 1280px;
+  top: 60px;
+  height: 30px;
+  background: #ffffff;
+  width: 100%;
+  padding: 0 0;
+  text-align: center;
+  color : #ad9c9c;
+  border-top:1px solid rgba(0,0,0,0.1);
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  box-shadow:1px 1px 2px rgba(0,0,0,0.2);
+  text-align: center;
+  z-index:2;
+}
+
+.menu_container_login{
+
+  width:700px;
+  min-width:700px;
+  height:100%;
+  margin:0 auto;
+  text-align: center;  
+}
+
+.menu_container_nologin{  
+  margin:0 auto;
+  width:400px;
+  min-width:300px;
+  height:100%;
+  text-align: center;  
+}
+
+
+.box-menu{  
+
+  text-align: center;
+  height: 30px;  
+  line-height: 30px;  
+  font-size: 15px;
+  border-width: 1px;
+  color : #ad9c9c;  
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;   
+  border-radius: 30px;  
+  margin-left: 3%;
+  margin-right : 3%;  
+  float:left;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+
+}
+
+.follow {
+  position: fixed !important;
+  top: 0;
+  min-width: 1024px;    
+  z-index:2;
+} 
+
+.box-menu:hover{
+  background-color:#c1e4e9; 
+}
+
+
+
+/* tag canvas */
+#tag_canvas_background{
+  position: fixed;
+  overflow-y: auto;  
+  top:0%;
+  bottom:0%;
+  left: 0%;
+  right: 0%;
+  width: 100%;
+  height: 100%;  
+  min-height: 100%;
+  z-index: 3;
+  background-color: rgba(255,255,255,0.7);
+  display: none;
+}
+
+#myCanvasContainer{
+  z-index: 4; 
+  position: relative;
+  top:0%;
+  bottom:0%;  
+  left: 10%;  
+  right: 10%;
+  width: 60%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  height: 100%;
+  min-width: 1024px;    
+  min-height:1024px;  
+  max-height: 100%;
+/* background-color: rgba(250, 247, 247, 0.7);  
+  background-image: url("/nerar/common/img/background.png");  
+*/
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px;        /* CSS3草案 */  
+
+}
+
+
+
+
+/* 共通フォローボタン */
+.follow_area{
+  float:left;
+}
+#follow_btn{
+  color: #999999;    
+  clear:both;
+  float:left;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;  
+  font-size:25px;
+  background: #fcf9f9;  
+  border:2px solid #999999;  
+  margin: 0px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  background-color:#c1e4e9;  
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+  cursor: pointer;
+
+}
+#follow_btn:hover{
+  background-color:#8bdbe8;
+}
+
+#un_follow_btn{
+  color: #999999;    
+  clear:both;
+  float:left;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;  
+  font-size:25px;
+  background: #fcf9f9;  
+  border:2px solid #999999;  
+  margin: 0px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  background-color:#e8b9c9;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+  cursor: pointer;
+
+}
+#un_follow_btn:hover{
+  background-color:#e8a2b9;
+}
+
+
+/* tagの検索窓 */
+.search_container{  
+  text-align: center;
+  height: 30px;  
+  line-height: 30px;  
+  font-size: 15px;
+  border-width: 1px;
+  color : #ad9c9c;  
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;   
+  border-radius: 30px;  
+  margin-top:3px;
+  margin-left: 3%;
+  margin-right : 3%;  
+  float:left;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+
+}
+.searchform {
+  width: 200px;
+  background: url(/nerar/common/img/serch_input.gif) left top no-repeat; 
+  display: block;
+  height: 24px;
+  position: relative;
+}
+.keywords {
+  width: 156px;
+  position: absolute;
+  top: 3px;
+  left: 12px;
+  border: 1px solid #FFF;
+  color:#999;  
+  line-height: 10px; /* これするとテキストが中央寄せになる */   
+}
+.searchBtn {
+  border: 0px;
+  width:10%;
+  height:100%;
+  position: absolute;
+  top: 3px;
+  left: 174px;
+  background: url(/nerar/common/img/search_btn.gif) left top no-repeat;  
+}
+.searchBtn :hover {
+  background-color:#8bdbe8;
+}
+.focus_search_text{
+  color:#000;
+}
+.unfocus_search_text{
+  color:#999;
+}
+
+
+.header_social_btn_set {
+  float:left;
+}
+.facebook_btn{
+  float:left;
+  margin:5px;
+}
+.twitter_btn{
+  float:left;
+  margin:5px;
+}
+
+
+

@@ -1,0 +1,197 @@
+{% if is_pjax %}
+{% else %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="/nerar/common/js/bonsai.js"></script>
+<!--     <script src="./bonsai.js"></script>-->
+
+{% endif %}
+
+
+  
+  <style>
+  /* Write code */
+  #player{
+    background-color:#EEE;
+    height: 600px;
+    width: 900px;
+  }
+  </style>
+  
+      <script type="bs" id="bs">
+      /* 初期値 */
+      var x,y,m,w,h;
+      var MAX_W,MAX_H,WIDTH,HEIGHT;
+
+      //オブジェクトのサイズ
+      var m = 2; //倍率(magnification)
+      var WIDTH = 100 * m; //幅 
+      var HEIGHT = 100 * m; //高
+      var gazou = '{{img_url}}'  == '/nerar/upload_file/origin/.jpg' ? '/nerar/common/img/logo.png' :  '{{img_url}}' ;
+//           var gazou =  'aa.png';
+      var dlog = {}; //phpにて作成
+
+      new Bitmap(gazou).on('load', function() {
+        this.addTo(stage);
+      }).attr({height:600,width:900});;
+      
+      
+      /* hintDraw */
+      /*
+        Direction : 1.top 2.under 3.left 4.right;
+      */
+//      var hint = function(PointX,PointY,Comment,Direction){
+      var hint = function(PointX,PointY){
+        var x = 100;
+        var y = 100;
+        /* Hint Group */
+        var hGroup = new Group();
+        hGroup.attr({x:PointX,y:PointY});
+        hGroup.addTo(stage);
+        
+        var hPGroup = new Group();
+        hPGroup.attr({x:x,y:y});
+        hPGroup.addTo(hGroup);
+        
+        /* Hint Point */
+        var hPoints = new Circle(x, y, 4);
+        hPoints.addTo(hGroup);
+        hPoints.stroke('red',0.4);
+        
+        var hPoint=[];
+        //right
+        hPoint[0] = new Ellipse(20,0,15,5);
+        hPoint[0].addTo(hPGroup);
+        hPoint[0].fill(color('green'));
+        
+        //under
+        hPoint[1] = new Ellipse(0,20,5,15);
+        hPoint[1].addTo(hPGroup);
+        hPoint[1].fill(color('green'));
+        
+        //left
+        hPoint[2] = new Ellipse(-20,0,15,5);
+        hPoint[2].addTo(hPGroup);
+        hPoint[2].fill(color('green'));
+        
+        //top
+        hPoint[3] = new Ellipse(0,-20,5,15);
+        hPoint[3].addTo(hPGroup);
+        hPoint[3].fill(color('green'));
+        
+        
+        /* HintSharp */
+        var hSharp = new Path([
+          ['moveTo', x-15*m, y-15*m],
+          ['lineBy', 15*m, 15*m],
+          ['lineBy', 15*m, -15*m],
+          ['lineBy', -30*m, 0*m]
+        ]);
+        hSharp.addTo(hGroup);
+        hSharp.stroke(color('rgba(0,0,0,.4)'),0);
+        hSharp.fill(color('rgba(0,0,0,.4)'));
+        
+        /* HintRect */
+        var rectX = x - 50 * m;
+        var rectY = y - 100 * m;
+        var rectW = WIDTH;
+        var rectH = HEIGHT - 15 * m;
+        var hRect = new Rect(rectX, rectY, rectW, rectH, 15 * m);
+        hRect.addTo(hGroup); 
+        hRect.fill(color('rgba(0,0,0,.4)'));
+  
+        /* 定点 */
+        var Ul = new Circle(rectX, rectY, 2);
+        Ul.addTo(hGroup);
+        Ul.fill('red');
+        var Dl = new Circle(rectX, rectY + rectH, 2);
+        Dl.addTo(hGroup);
+        Dl.fill('red');
+        var Ur = new Circle(rectX + rectW, rectY, 2);
+        Ur.addTo(hGroup);
+        Ur.fill('red');
+        var Dr = new Circle(rectX + rectW, rectY + rectH, 2);
+        Dr.addTo(hGroup);
+        Dr.fill('red');
+        
+        /* Hint Text */
+        //var foo = Comment ? Comment : 'Comment Nothing';
+        var hText = new Text('foo');
+        hText.addTo(hGroup);
+        hText.attr({
+          fontFamily: 'Arial, sans-serif',
+          fontSize: '20',
+          fillColor: 'red',
+          strokeColor: 'yellow',
+          strokeWidth: 3
+        });
+        
+        hPGroup.animate('1s', {
+          rotation: Math.PI
+        });
+        
+        hGroup.animate('1s', {
+          x: Math.random() * 500, y: Math.random() * 200
+        }, 
+        { easing: 'bounceInOut'});
+      };
+      
+
+      /* Draw Log Memo */
+      /* Rules 
+        1. Groupオブジェクトの格納
+        2. x,y,hintComment
+        3. 初期表示用には、Serverにて動的生成()
+      */
+/*      
+      for(var i in dlog){
+        hint(
+            dlog[i].pos.x
+          , dlog[i].pos.y
+          , dlog[i].comment
+          , dlog[i].pos.direction
+        );
+      }
+*/      
+      stage.on('pointermove', function(e) {
+        hint(e.stageX,e.stageY);
+      });
+      
+
+      </script>
+
+
+{% if is_pjax %}
+{% else %}
+</head>
+<body>
+{% endif %}
+
+
+    <div id="nav"></div>
+    
+    <div id="content">
+      <div id="player"></div>
+      <script>
+        var player = document.getElementById('player');
+        var b = bonsai.run(player, {
+          code: document.getElementById('bs').innerHTML,
+          height: 600,
+          width: 900,
+          framerate: 50
+        });
+
+      </script>
+    </div>
+
+
+
+{% if is_pjax %}
+{% else %}
+</body>
+</html>
+{% endif %}

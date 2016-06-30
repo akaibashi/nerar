@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <script src="/nerar/common/js/bonsai.js"></script>
+  <style>
+  /* Write code */
+  #player{
+    border: solid #EEE;
+    height: 600px;
+    width: 900px;
+    top: 40px;
+    position: relative;
+  }
+  .input_form_btn_add{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  background: #ffffff;  
+  border:1px solid #ad9c9c;
+  text-align: center;
+  width: 120px;
+  height: 59px;  
+  line-height: 59px; 
+  font-size: 20px;
+  border-width: 3px;1
+  float:right;
+  color : #ad9c9c;  
+  z-index:2;
+
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease; 
+  }
+  .input_form_btn_add:hover{
+    background-color:#c1e4e9;
+  }
+  .input_form_comment {
+    color: #AD9C9C;
+    float: left;
+    text-align: center;
+    font-size: 20px;
+    width: 100px;
+    height: 75px;
+    border: 2px solid #E8E8E8;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    z-index:2;
+  }
+  </style>
+</head>
+  <body>
+    <div id="nav"></div>
+    <div id="content">
+   <div class="leftnav">
+        <div class="colornav">
+        Hintクリックでカラー変更
+          <div class="colorslide">
+            赤 <input type="range" name="color_r" id="color_r" min="0" max="255" step="1" value="230" onchange="colorChangeValue(this.value,this.name)">
+            : <span id="color_r_val">230</span>
+           </div>
+          <div class="colorslide">
+            緑 <input type="range" name="color_g" id="color_g" min="0" max="255" step="1" value="230" onchange="colorChangeValue(this.value,this.name)">
+            : <span id="color_g_val">230</span>
+           </div>
+          <div class="colorslide">
+            青 <input type="range" name="color_b" id="color_b" min="0" max="255" step="1" value="230" onchange="colorChangeValue(this.value,this.name)">
+            : <span id="color_b_val">120</span>
+           </div>
+          <div class="colorslide">
+            透 <input type="range" name="color_p" id="color_p" min="0" max="1" step="0.1" value="0.4" onchange="colorChangeValue(this.value,this.name)">
+            : <span id="color_p_val">0.4</span>
+           </div>
+          <div class="posslide">
+            x <input type="text" id="x_val" value="0">
+          </div>
+          <div class="posslide">
+            y <input type="text" id="y_val" value="0">
+          </div>
+          <div class="angleslide">
+            r <input type="text" id="Angle_val" value="0">
+          </div>
+          <div class="Judgment">
+            add <input type="checkbox" name="comment_judgment" id="comment_judgment">
+           </div>
+          <script type="text/javascript">
+          function colorChangeValue(value,name) {
+              document.getElementById(name + "_val").innerHTML = value;
+          }
+          function posChangeValue(value,name) {
+              document.getElementById(name + "_val").value = value;
+          }
+          </script>
+        </div>
+      </div>
+      <form class="commentadd" name="commentform">
+        <input id="commentadd" name="commentadd" class="input_form_comment" type="text" value="" style="display:none;" onblur="this.style.display ='none' "/>
+        <input id="btn_commentadd" name="btn_commentadd" class="input_form_btn_add" type="button" value=" inHint " style="display:none;"/>
+      </form>
+      <div id="player"></div>
+      <script type="bs" id="bs">
+      /* 初期値 */
+      var x,y,m,w,h;
+      var MAX_W,MAX_H,WIDTH,HEIGHT;
+      //オブジェクトのサイズ
+      m = 1; //倍率(magnification)
+      var gazou = '{{img_url}}'  == '/nerar/upload_file/origin/.jpg' ? '/nerar/common/img/logo.png' :  '{{img_url}}' ;
+      var dlog = {};
+      dlog = parent.window.dlog;
+      var clickflg = true;
+
+      /*
+        inputdsp
+        入力項目の表示
+        svgでの入力項目表示は不可。
+        既存のinputtypeを利用する。
+      */
+      var input_dsp =  function(x,y){
+        x = x + parent.document.getElementById('player').offsetLeft;
+        y = y + parent.document.getElementById('player').offsetTop;
+        //texttype
+        parent.document.getElementById('commentadd').style.left = String(x - 50 * m) + "px";
+        parent.document.getElementById('commentadd').style.top = String(y - 95 * m) + "px";
+        parent.document.getElementById('commentadd').style.position = "absolute";
+        parent.document.getElementById('commentadd').style.display = "";
+        parent.document.getElementById('commentadd').focus();
+        //buttontype
+        parent.document.getElementById('btn_commentadd').style.left = String(x + 60 * m) + "px";
+        parent.document.getElementById('btn_commentadd').style.top = String(y - 100 * m) + "px";
+        parent.document.getElementById('btn_commentadd').style.position = "absolute";
+        parent.document.getElementById('btn_commentadd').style.display = "";
+
+      }
+
+      /* start hint Draw */
+      /*
+        PointX    : クリック位置X
+        PointY    : クリック位置Y
+        Comment   : 出力コメント
+        Angle : 位置(角度)
+      */
+      var hint = function(PointX,PointY,Comment,Angle,color_r,color_g,color_b,color_p,rect_x,rect_y){
+        this.x,this.y;
+        this._Angle;
+        x = PointX;
+        y = PointY;
+        this.WIDTH = 100 * m; //幅 
+        this.HEIGHT = 100 * m; //高
+        this.LINE_RIGHT = 49;
+        this.LINE_TOP = -100; 
+        //最大値、最小値は相対比で求める
+        this.RECTMIN = -30;
+        this.RECTMAX = 100;
+        
+        /* start Group Add */
+        /* Hint Group */
+        this.AllGroup = new Group();
+        AllGroup.attr({x:x 
+          , y:y 
+          , opacity : 0
+        });
+        AllGroup.addTo(stage);
+        
+        /* Hint Point Group */
+        this.hPGroup = new Group();
+        hPGroup.addTo(AllGroup);
+        this.hPoint;
+        
+        /* Hint Sharp Group */
+        this.hSGroup = new Group();
+        hSGroup.addTo(AllGroup);
+        this.hSharp;
+        
+        /* Hint Rect Group */
+        this.hRGroup = new Group();
+        hRGroup.addTo(AllGroup);
+        this.hRect;
+        this.hRect_Line_r;
+        
+        /* Hint Text Group */
+        this.hTGroup = new Group();
+        hTGroup.addTo(AllGroup);
+        this.hText;
+        
+        this.hColor = 'rgba(' + color_r + ' ,' + color_g + ' ,' + color_b + ' ,' +  color_p + ' )';
+        
+        
+        /* start Group Add */
+        
+        /* start Object Create */
+        
+        
+        /* Hint Point */
+        //初期角度
+        AllGroup.attr({rotation: Math.PI/180 * Number(Angle)});
+        /*
+        var drawPoint = function(){
+          var hPoint=[];
+          hPoint[0] = new Circle(0, 0, 4);                      //pin
+          hPoint[1] = new Ellipse(10 * m,0,7.5 * m,2.5 * m);    //right
+          hPoint[2] = new Ellipse(0,10 * m,2.5 * m,7.5 * m);    //under
+          hPoint[3] = new Ellipse(-10 * m,0,7.5 * m,2.5*m);     //left
+          hPoint[4] = new Ellipse(0,-10 * m,2.5 * m,7.5 * m);   //top
+          for(var i = 0; i<=4; i++){
+            hPoint[i].addTo(hPGroup);
+            i == 0 ? hPoint[i].stroke('red',0.7) : hPoint[i].fill(color('green'));
+          }
+        }
+        */
+        
+        var drawPoint = function(){
+          hPoint = new Circle(0, 0, 4).addTo(hPGroup).stroke('red',0.7);
+          hPoint.attr({
+            cursor: 'pointer'
+          });
+        }
+
+        /* HintRect */
+        var drawRect = function(rectX,rectY,rectW,rectH){
+          var _rectX = -50;
+          var _rectY = LINE_TOP;
+          var _rectW = WIDTH ;
+          var _rectH = HEIGHT - 15;
+          var _marumi = 30;
+          hRect = new Rect(_rectX * m, _rectY * m, _rectW * m, _rectH * m, _marumi * m);
+          hRect.addTo(hRGroup); 
+          hRect.attr({
+            fillColor : color(hColor)
+          });
+          
+          /* 長さ変更用 */
+          /* Line_Right */
+          hRect_Line_r = new Rect(_rectW+_rectX-1,_rectY+_marumi,1,_rectH-_marumi*2);
+          hRect_Line_r.addTo(hRGroup);
+          hRect_Line_r.stroke(color('rgba(0,0,0,0)'),1);
+          hRect_Line_r.attr({
+            cursor: 'pointer'
+          });
+        }
+        
+        /* HintSharp */
+        var drawSharp = function(){
+          hSharp = new Path([
+            ['moveTo', -15*m, -15*m]
+            , ['lineBy', 15*m, 15*m]
+            , ['lineBy', 15*m, -15*m]
+            , ['lineBy', -30*m, 0*m]
+          ]);
+          hSharp.addTo(hSGroup);
+          hSharp.attr({
+            fillColor: color(hColor)
+          });
+        }
+        
+        /* Hint Text */
+        var drawText = function(){
+          var foo = Comment ? Comment : '';
+          hText = new Text(decodeURIComponent(foo));
+          hText.addTo(hTGroup); 
+          hText.attr({
+            x:-50
+            , y:-75
+            , fontFamily: 'Arial, sans-serif'
+            , fontSize: '13'
+            , textFillColor: 'red'
+          });
+        }
+        
+        //Create
+        drawPoint();
+        drawSharp();
+        drawRect();
+        drawText();
+        /* end Object Create */
+        
+        /* 
+          Event Start
+        */
+        
+        //ObjectDown時、属性変更
+        var eventRectMove = function(){
+          var _dragx,_dragy;
+          AllGroup.on('multi:pointerdown', function(e) {
+           //色変更
+            var _color_r =  parent.document.getElementById('color_r').value;
+            var _color_g =  parent.document.getElementById('color_g').value;
+            var _color_b =  parent.document.getElementById('color_b').value;
+            var _color_p =  parent.document.getElementById('color_p').value;
+            var _rgba = 'rgba(' + _color_r + ',' + _color_g + ',' + _color_b +',' + _color_p +')';
+            hRect.attr({fillColor:_rgba});
+            hSharp.attr({fillColor:_rgba});
+            clickflg = false;
+            
+            // Catch new x/y at beginning of drag
+            _dragx = this.attr('x');
+            _dragy = this.attr('y');
+            AllGroup.addTo(stage);
+          });
+          
+          //RectDrag時、移動
+          hRect.on('multi:drag', function(e){
+            var _x,_y;
+            _x = _dragx + e.diffX
+            _y = _dragy + e.diffY 
+            AllGroup.attr({
+               x: _x
+              , y: _y
+            })
+            parent.window.posChangeValue(_x,'x');
+            parent.window.posChangeValue(_y,'y');
+          }).on('multi:pointerup',function(e){
+            var allx,ally;
+            allx = AllGroup.attr('x');
+            ally = AllGroup.attr('y');
+            input_dsp(allx,ally);
+          });
+        }
+        eventRectMove();
+        
+        /**
+         * Rectの大きさを変更
+         */
+        var eventRectLine = function(){
+
+          var _dragw;
+          var _dragx;
+          hRect_Line_r.on('mouseover',function(e){
+            this.stroke(color('rgba(255,0,0,0.7)'),1.7);
+          }).on('multi:pointerdown',function(e){
+            _dragw = hRect.attr('width');
+            _dragx = hRect_Line_r.attr('x');
+          }).on('multi:drag',function(e){
+            var _x,_w;
+            _w = _dragw+e.diffX;
+            _x = _dragx+e.diffX;
+            //最小制御
+            if(WIDTH+RECTMIN > _w){
+              _w = WIDTH+RECTMIN;
+              _x = LINE_RIGHT+RECTMIN;
+            }
+            //最大制御
+            if(WIDTH+RECTMAX < _w){
+              _w = WIDTH+RECTMAX;
+              _x = LINE_RIGHT+RECTMAX;
+            }
+            hRect.attr({
+              width: _w
+            });
+            this.attr({
+               x: _x
+            });
+          }).on('mouseout',function(e){
+            this.stroke(color('rgba(0,0,0,0)'),0);
+            console.log(e.touchId);
+          });
+        };
+        eventRectLine();
+        
+        hPoint.on('multi:drag',function(e){
+          var _rad = Number(Math.atan2(e.diffY, e.diffX)/Math.PI);
+          AllGroup.attr({rotation: _rad*3});
+          parent.window.posChangeValue(parseInt(_rad*180),'Angle');
+        });
+        
+        /* load Event */
+        /* AnimationEvent */
+        /*
+        hPGroup.animate('5s', {
+          rotation:  Math.PI 
+          , opacity: 0
+        }, {
+          easing: 'elasticInOut'
+        });
+        */
+        
+        //SharpGroup 
+        //AllGroup 
+        AllGroup.animate('2s', {
+          opacity: 1
+        }, 
+        { easing: 'quartOut'});
+
+
+        return this;
+      }
+      
+      /* End hint draw */
+
+      //クリック時イベント
+      stage.on('doubleclick', function(e) {
+        var _jud = parent.document.getElementById("comment_judgment").checked;
+        if(_jud && clickflg){
+          //新規入力時
+          var _PointX = e.stageX;
+          parent.window.posChangeValue(e.stageX,"x");
+          var _PointY = e.stageY;
+          parent.window.posChangeValue(e.stageY,"y");
+          var _Angle =0;
+          var _color_r =  parent.document.getElementById('color_r').value;
+          var _color_g =  parent.document.getElementById('color_g').value;
+          var _color_b =  parent.document.getElementById('color_b').value;
+          var _color_p =  parent.document.getElementById('color_p').value;
+          parent.document.getElementById("comment_judgment").checked = false;
+          var hoge = new hint(
+            _PointX
+            ,_PointY
+            ,parent.document.getElementById('commentadd').value
+            ,0
+            , _color_r
+            , _color_g
+            , _color_b
+            , _color_p
+          );
+          //入力フォームの表示
+          input_dsp(_PointX,_PointY);
+
+// フォーカス外れたとき
+parent.document.getElementById('commentadd').onblur = function (){
+console.log(hoge);
+hoge.AllGroup = null;
+hoge.hPGroup = null;
+hoge.hSGroup = null;
+hoge.hRGroup = null;
+hogehTGroup = null;
+hoge = null;
+console.log(hoge);
+
+
+}
+
+
+        }
+        clickflg = true;
+      });
+      
+      </script>
+      <script>
+        dlog = {};
+        var player = document.getElementById('player');
+        bonsai.setup({
+          runnerContext: bonsai.IframeRunnerContext
+        }).run(player, {
+          code: document.getElementById('bs').innerHTML,
+          height: 600,
+          width: 900,
+          framerate: 50
+        });
+      </script>
+    </div>
+  </body>
+</html>

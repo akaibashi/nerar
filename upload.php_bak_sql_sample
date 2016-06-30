@@ -1,0 +1,113 @@
+<?php
+
+require_once './init.php';
+require './class.upload.php';
+
+
+// db connect
+$dsn = 'mysql:dbname=nerar;host=localhost';
+$user = 'root';
+$password = '';
+
+
+/*
+$is_upload = $_POST["upload"];
+*/
+
+try{
+    $dbh = new PDO($dsn, $user, $password);
+/*    
+    // insert
+    $sql = 'insert into test (comment) values (?)';
+    $stmt = $dbh->prepare($sql);
+    $flag = $stmt->execute(array('hoge-'));
+
+    if ($flag){
+        print('データの追加に成功しました<br>');
+    }else{
+        print('データの追加に失敗しました<br>');
+    }
+    
+    
+    // select
+    $sql = 'select * from test';
+    foreach ($dbh->query($sql) as $row) {
+        print($row['id']);
+        print($row['comment'].'<br>');
+        
+var_dump("kiteru");        
+    }
+*/
+
+
+
+// アップロード時のみ
+if($_FILES["upload_file"]){
+/*  
+  // ファイル情報を取得
+  $file　= $_FILES["upload_file"]["name"]; // ファイル名
+  $type　= $_FILES["upload_file"]["type"]; // MIME型
+  $tmpname = $_FILES["upload_file"]["tmp_name"]; // テンポラリファイル名
+  $size　= $_FILES["upload_file"]["size"]; // サイズ 
+*/
+
+  $file_name = $_FILES["upload_file"]["name"];
+
+
+  // 画像サイズを取得
+  list($width, $height) = getimagesize($tmpname);
+  
+/*
+var_dump($width);
+*/
+
+  // アップロードされたファイル取得
+  $upload_file = file_get_contents($_FILES["upload_file"]["tmp_name"]);
+  
+  // データベースに保存
+  $sql = 'insert into images (ext, image) values (?, ?)';
+  $stmt = $dbh->prepare($sql);
+  $flag = $stmt->execute(array($file_name, $upload_file));
+  
+  if ($flag){
+      print('データの追加に成功しました<br>');
+  }else{
+      print('データの追加に失敗しました<br>');
+  }
+    
+}
+ 
+ 
+    
+    
+// select
+$sql = 'select * from images where id = 12';
+foreach ($dbh->query($sql) as $row) {
+    $img = $row['image'];
+}
+ 
+    
+        
+    
+}catch (PDOException $e){
+    print('Connection failed:'.$e->getMessage());
+    die();
+}
+
+$dbh = null;
+
+
+
+
+
+$template = $twig->loadTemplate('upload.html');
+$data = array(
+    'title' => 'upload',
+    'name'  => 'twig hogereee',
+    'is_pjax'  => $pjax,   
+    'img' => $img 
+);
+echo $template->render($data);
+
+
+

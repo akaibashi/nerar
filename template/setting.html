@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ title }}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/jquery.tagsinput.css"  charset="UTF-8" />
+<link rel="stylesheet" type="text/css" href="/nerar/common/css/common_style.css" />
+<!--[if IE]><script type="text/javascript" src="/_lib/js/excanvas.js"></script><![endif]-->
+<!-- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/nerar/common/js/jquery.tagsinput.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/nerar/common/js/tag_canvas.js" type="text/javascript"></script>
+<script src="/nerar/common/js/common_use.js" type="text/javascript" charset="UTF-8"></script>
+
+<!-- IEを撲滅するため無条件でエラー --> 
+<!--[if IE ]>
+<script>
+(function($){
+
+    location.href="/nerar/ie_information.php";  
+})();
+
+/*
+    $(document).ready( function(){
+    // IE用のエラーページへ遷移させる
+    location.href="/nerar/ie_information.php";    
+    });
+*/
+</script>
+<![endif]-->
+
+
+<style type="text/css">
+/*<![CDATA[*/
+
+#container{
+
+  background-image: url("/nerar/common/img/background_w.png");
+  background-repeat:repeat;
+
+  min-width: 1600px;   
+  clear:both;
+  top: 35px;
+  margin: 0 auto;  
+  margin-top:35px;
+  float:left;
+
+}
+
+
+/* タブ */
+.tab_btn_container{
+  float: left;
+  clear: both;
+  width: 90%;
+  height: auto;
+  border-width: 1px;  
+  border-bottom-style: solid;  
+  border-bottom-color: rgb(225, 223, 223);    
+}
+.tab_btn{
+  width: 120px;
+  height: 50px;
+  text-align: center;  
+  line-height: 50px; /* これするとテキストが中央寄せになる */   
+  float: left;
+  background: #faf7f7;
+  font-size: 18px;
+  border-width: 1px;
+
+  border-style: solid;  
+  border-color: #ebf6f7;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor:pointer;  
+}
+.tab{
+  float: left;
+  clear: both;
+}
+
+/* インターネットタブレイアウト */
+#internet_form{
+  float: left;
+  clear: both;
+}
+
+/* ローカルタブレイアウト */
+#local_form{
+  float: left;
+  clear: both;
+}
+
+/* インターネット画像のview */
+#internet_image_view{
+  float: left;
+  max-width: 768px;
+  max-height: 768px;
+  min-width: 256px;
+  min-height: 256px;  
+  border-width: 1px;
+  border-style: solid;  
+  border-color: #ebf6f7;
+  background-repeat: no-repeat;
+  background-position: center center;  
+}
+#internet_image_view_img {
+  max-width: 768px;
+  max-height: 768px;
+  top: 0;
+  left: 0;
+}
+
+.msg{
+  border:0px;
+  border-bottom:1px solid #ad9c9c;
+
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  margin-left:100px;
+  text-align: left;  
+  font-size: 30px;
+  width: 768px;
+  height: 50px;
+}
+
+.row_msg{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: right;  
+  font-size: 25px;
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+
+}
+
+.input_form_nick{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: center;  
+  font-size: 30px;
+  width: 500px;
+  height: 50px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+}
+
+.form_style{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 25px;
+  width: 500px;
+  height: 30px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px; 
+}
+
+.form_textarea_style{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 25px;
+  width: 700px;
+  height: 100px;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px; 
+  border-radius: 20px;   
+  resize:none;  
+}
+
+.messageCount{
+  color:green;
+}
+
+
+.tab_internet{
+  border-style:solid;
+  float:left;
+}
+
+
+
+.msg{
+  color: #ad9c9c;   
+  width:768px;
+  float:left;
+  clear:both;  
+}
+.ok_ng_style{
+  margin: 8px 8px 8px 8px;
+  padding: 8px 8px 8px 8px;  
+  float:left;
+  width:40px;
+  height:40px;
+}
+.complete_msg{
+  color: #ad9c9c;    
+  float:left;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;  
+  font-size: 30px;
+  width: 300px;
+  height: 50px;
+}
+
+.input_form_submit_btn_container{
+  text-align: center;    
+  float:left;
+  clear:both;
+  width:70%;
+  margin-top:30px;
+  margin-bottom:40px;
+
+}
+.input_form_btn_ng{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  background: #ffffff;  
+  border:1px solid #ad9c9c;
+  text-align: center;
+  width: 120px;
+  height: 59px;  
+  line-height: 59px; 
+  font-size: 25px;
+  border-width: 3px;
+  padding-left: 5px;
+  padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;  
+  float:right;
+  color : #ad9c9c;  
+
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease; 
+}
+.input_form_btn_ng:hover{
+  background-color:#c1e4e9;
+}
+
+
+.unregist_form_btn_ng{
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;    
+  border-radius: 30px; 
+
+  background: #ffffff;  
+  border:1px solid #ad9c9c;
+  text-align: center;
+  width: 240px;
+  height: 59px;  
+  line-height: 59px; 
+  font-size: 25px;
+  border-width: 3px;
+  padding-left: 5px;
+  padding-right: 10px;
+  margin-left: 830px;
+  margin-right: 10px;  
+  float:right;
+  color : #998b8b;  
+
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;   
+}
+.unregist_form_btn_ng:hover{
+  background-color:#FF9999;
+}
+
+
+
+.file_select{
+  top:        0;
+  left:       0;
+  width:      200px;
+  height:     40px;
+  /* IE以外 */
+  opacity:    0;
+  /* IE 8 */
+  -MS-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+
+}
+
+#file_select_dummy{
+  color: #ad9c9c;     
+  font-size: 25px;  
+  text-align: center;    
+  line-height: 40px; /* これするとテキストが中央寄せになる */     
+  width:      200px;
+  height:     40px;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;  
+  cursor:     pointer;
+  border:2px solid #e8e8e8;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px; 
+  border-radius: 20px;  
+  -webkit-transition: all 1s ease;
+     -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+       -o-transition: all 1s ease;
+          transition: all 1s ease;   
+}
+#file_select_dummy:hover{
+  background-color:#c1e4e9;
+}
+#file_select_name{
+  color: #ad9c9c;   
+  font-size: 25px;  
+}
+
+.profile_table{
+  float:left;
+}
+
+#profile_image_view{
+  float:left;
+  width:400px;
+  height:400px;
+}
+
+
+.thumb{
+  width:400px;
+  height:400px;  
+}
+
+/*]]>*/
+</style>
+<script type="text/javascript">
+//<![CDATA[
+
+$(function(){
+
+  // スクロール位置の保存
+  var scrollTop = 0;
+
+  // ページが遷移するタイミングで呼ばれる
+  window.addEventListener("popstate", function(popStateEvent) {
+
+
+  }, false);
+
+
+  /*
+   *
+   * ajax通信
+   *
+   */
+  function ajax(method, path, data, callback, errcallback) {
+    $.ajax({
+      type: method,
+      url: path,
+      cache: false,
+      data: data,
+      success: callback,
+      error: errcallback
+    });
+  }
+
+  /* 残り文字数の制御 */
+  var profile_textarea_timer;
+  var profile_oldvalue = "";
+  var input_check_profile = function inputCheckProfile(){
+    if(profile_oldvalue != $("#profile_textarea").val()){
+      var current = 255 - $("#profile_textarea").val().length;
+      $("#profile_count").text(current);
+      profile_oldvalue = $("#profile_textarea").val();
+    }
+  };
+  // フォーカスが当たった場合に監視スタート
+  $("#profile_textarea").focus(function(){
+    // 1000ミリ秒間隔で呼び出す
+    profile_textarea_timer = setInterval(input_check_profile,100);   
+  });   
+  // フォーカスが外れたら監視解除
+  $("#profile_textarea").blur(function(){
+    clearTimeout(profile_textarea_timer);
+  });  
+
+
+
+  /* ニックネーム重複チェック */
+  var is_use_timer;
+  var is_nickname_used = function isNicknameUsed(){
+    //　空はNG
+    if("" != $("#nick_textarea").val()){
+      // ajaxで現時点で入力されている文字列を入手
+//      var data = {"nick": document.input_form.nick.value};
+      var data = {"nick": $("#nick_textarea").val(),
+                  "user_id" : {{ user_id }}
+                  };
+
+      var path = "/nerar/is_nickname_used_exclusion.php";
+      // 成功時
+      var sFun = function(data){
+        var retData = JSON.parse(data);
+        // nicknameが既に使われている場合
+        if (retData && (retData["is_use"] == "true")){
+          $("#is_use").empty();
+          $("#is_use").append("<div><img class='ok_ng_style' src='/nerar/common/img/ng.png'></div>");   
+
+        }
+        // nicknameが利用可能な場合
+        else{
+          $("#is_use").empty();
+          $("#is_use").append("<div><img class='ok_ng_style' src='/nerar/common/img/ok.png'></div>");  
+
+        }
+      };
+
+      // 失敗時
+      var eFun = function(data) {
+        // エラー
+        $("#is_use").empty();
+        $("#is_use").append("<div><img class='ok_ng_style' src='/nerar/common/img/ng.png'></div>");  
+
+      };
+
+      ajax("GET", path, data, sFun, eFun);
+    }else{
+      $("#is_use").empty();
+      $("#is_use").append("<div><img class='ok_ng_style' src='/nerar/common/img/ng.png'></div>");    
+
+    }
+  }
+
+
+
+  /* ニックネームの残り文字数 */
+  var nick_timer;
+  var nick_oldvalue = "";
+  var input_check_nick = function inputCheckNick(){
+    if(nick_oldvalue != $("#nick_textarea").val()){
+      var current = 15 - $("#nick_textarea").val().length;
+      $("#nick_count").text(current);
+      nick_oldvalue = $("#nick_textarea").val();
+    }
+  };
+  // フォーカスが当たった場合に監視スタート
+  $("#nick_textarea").focus(function(){
+    // 1000ミリ秒間隔で呼び出す
+    nick_timer = setInterval(input_check_nick,100);  
+    // 00ミリ秒間隔で呼び出す
+    is_use_timer = setInterval(is_nickname_used,500);   
+
+  });   
+  // フォーカスが外れたら監視解除
+  $("#nick_textarea").blur(function(){
+    clearTimeout(nick_timer);
+    clearTimeout(is_use_timer);
+  });  
+
+
+  // ダミーdivがクリックされたイベントをトリガーとしてファイルを選択させる
+  $('#file_select_dummy').click( function(){
+      $('#file_select').trigger('click');
+  });
+
+  // ファイルが選択されたイベントを取得
+  $('#file_select').change( function(){
+    var fileList = document.getElementById("file_select").files;
+    var list = "";
+    for(var i=0; i<fileList.length; i++){
+
+
+
+      // 画像のプレビュー表示
+      var reader = new FileReader();
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+          document.getElementById('profile_image_view').innerHTML = '<img class="thumb" src="' + e.target.result +'"/>';
+        };
+      })(fileList[i]);
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(fileList[i]);
+
+
+
+      list += fileList[i].name + "<br>";
+    }
+    document.getElementById("file_select_name").innerHTML = list;
+  });
+
+
+/* 削除ボタン押下時 */
+$("#del_form").submit(function() {
+  if(window.confirm('Can I delete it?')){ // 確認ダイアログを表示
+    return true; // 「OK」時は送信を実行
+  }
+  else{ // 「キャンセル」時の処理
+    return false; // 送信を中止
+  }
+});
+
+
+
+});
+
+
+
+//]]>
+</script>
+
+</head>
+<body>
+
+<div id="contents">
+  {% include "/inc/header_navi.html" %} 
+
+
+
+  <div id="container">
+
+    {% if img_upload_error %}
+    <div class="msg">
+      <img class='ok_ng_style' src='/nerar/common/img/ng.png'>
+      <div class="complete_msg">Failed!</div>
+    </div>
+    {% endif %}
+    {% if img_upload_complete %}
+    <div class="msg">
+      <img class='ok_ng_style' src='/nerar/common/img/ok.png'>
+      <div class="complete_msg">Complete!</div>
+    </div>
+    {% endif %}
+
+    <div class="tab">
+      <br />  
+      <div class="msg">Please input your profile.</div>         
+      <form action="/nerar/setting.php" id="local_form" method="post" enctype="multipart/form-data" name="input_form">
+        <input type="hidden" name="submit" value="true">
+        <table class="profile_table">
+          <tr>
+            <td class="row_msg">image : </td>
+            <td>              
+              <div id="file_select_dummy">choose a file.</div>
+              <div id="file_select_name"></div>
+
+              <!-- preview -->    
+              <div id="profile_image_view"><img class="thumb" src="/nerar/profile_images/{{ profile_img }}"/></div>
+
+            </td>
+
+
+          </tr>             
+          <tr>
+            <td class="row_msg">nick : <br /><div id="nick_count" class="messageCount"></div> </td>
+            <td>
+              <input type="text" name="nick" id="nick_textarea" class="input_form_nick" maxlength="15" value="{{ nick }}"></textarea>
+              <div id="is_use"></div>
+            </td>      
+
+          </tr>
+
+          <tr>
+            <td class="row_msg">profile : <br /><div id="profile_count" class="messageCount"></div> </td>
+            <td>
+              <textarea name="profile" rows="4" cols="40" id="profile_textarea" class="form_textarea_style" maxlength="255">{{ profile }}</textarea>
+            </td>            
+          </tr>
+        </table>
+
+        <div class="input_form_submit_btn_container">      
+          <input type="submit" value="submit" id="input_form_btn" class="input_form_btn_ng"/>
+        </div>
+        <input type="file" class="file_select" name="upload_file" id="file_select" accept="image/jpeg,image/gif,image/png,image/bmp" />                    
+      </form>
+
+
+
+      <form action="/nerar/user_unregist.php" id="del_form" method="post" enctype="multipart/form-data" name="delete_form">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <div class="input_form_submit_btn_container">      
+          <input type="submit" value="User unregist" id="unregist_form_btn" class="unregist_form_btn_ng"/>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+{% include "/inc/hot_tags.html" %} 
+
+</body>
+</html>

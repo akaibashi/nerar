@@ -1,0 +1,62 @@
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>  
+  <style>
+  /* Write code */
+  #Success{
+    font-size: 20px;
+    color: red;
+    border: #EEE;
+  }
+  #Faild{
+    font-size: 20px;
+    color: blue;
+    border: #EEE;
+  }
+  </style>
+</head>
+<body>
+      <div id="Success">Success</div>
+      <div id="Faild">Faild</div>
+      <script type="text/javascript">
+
+        /* ajax通信 */
+        function follow_ajax(path, callback, errcallback) {
+          $.ajax({
+            type: "GET",
+            url: path,
+            cache: false,
+            success: callback,
+            error: errcallback
+          });
+        }
+
+      var AjaxSampleClick = function(path) {
+        data = ""; //今回は必要ないので無し
+        
+        /* Ajax成功時 */
+        var sFun = function(data){
+         $("#Success").append(data);
+        };
+        
+        /* 失敗時 */
+        var eFun = function(data) {
+          alert("sorry, ファイル見当たらないよ!");      
+        };
+        
+        follow_ajax(path, sFun, eFun);
+      };
+      
+      $('#Success').on('click',function(){
+        AjaxSampleClick('./Success.html');
+      });
+      
+      $('#Faild').on('click',function(){
+        AjaxSampleClick('./Faild.html');
+      });
+      
+      </script>
+</body>
+</html>

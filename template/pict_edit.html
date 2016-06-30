@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>pixastic</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="/nerar/common/js/pixastic.custom.js" type="text/javascript" charset="UTF-8"></script>
+</head>    
+<body>
+
+<!-- ボタン -->
+<div class="actiondemo">
+    <button onclick="description();">白黒</button>
+    <button onclick="solarize();">ソーラライズ</button>
+    <button onclick="sepia();">セピア</button>
+    <button onclick="flip();">横反転</button>
+    <button onclick="flipv();">縦反転</button>
+</div>
+<canvas width="400" height="300" id="demoimage"></canvas>
+<script>
+
+	var can = document.getElementById("demoimage");
+	var context = can.getContext("2d");
+	//Image
+	var img = new Image();
+	img.src = "http://hinto.me/nerar/images/origin/734a41e07debf229dcd3a8ec7e34cac4.jpg";
+	img.onload = function(){
+	    context.drawImage(img,0,0);
+	};
+	//以下ボタンアクション
+    //白黒
+     var description = function (){
+         Pixastic.process(document.getElementById('demoimage'), "desaturate", {average : false});
+     };
+    //ソーラライズ
+     var solarize = function (){
+         Pixastic.process(document.getElementById('demoimage'), "solarize");
+     };
+    //セピア
+     var sepia = function(){
+         Pixastic.process(document.getElementById('demoimage'), "sepia");
+     };
+    //横反転
+     var flip = function() {
+        Pixastic.process(document.getElementById('demoimage'), "fliph");
+     };
+    //縦反転
+     var flipv = function() {
+        Pixastic.process(document.getElementById('demoimage'), "flipv");
+     };
+
+</script>
+</body>
+</html>
+
+
+
